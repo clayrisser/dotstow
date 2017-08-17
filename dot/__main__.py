@@ -1,4 +1,5 @@
 from cement.core.foundation import CementApp
+from config import NAME, BANNER
 from controllers import (
     AddController,
     BaseController,
@@ -8,16 +9,9 @@ from controllers import (
     PushController
 )
 
-VERSION = '0.0.0'
-
-BANNER = """
-dot v%s
-Copyright (c) 2017 Jam Risser
-""" % VERSION
-
 class App(CementApp):
     class Meta:
-        label = 'dot'
+        label = NAME
         base_controller = BaseController
         handlers = [
             AddController,
@@ -29,6 +23,7 @@ class App(CementApp):
 
 def main():
     with App() as app:
+        print(BANNER)
         app.run()
 
 if __name__ == '__main__':

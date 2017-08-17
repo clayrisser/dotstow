@@ -1,4 +1,8 @@
 from cement.core.controller import CementBaseController, expose
+from services import git_service
+from six.moves import input
+import os
+import getpass
 
 class CloneController(CementBaseController):
     class Meta:
@@ -6,7 +10,49 @@ class CloneController(CementBaseController):
         description = 'Clone dotfiles'
         stacked_on = 'base'
         stacked_type = 'nested'
+        arguments = [
+            (['-u', '--user'], {
+                'action': 'store',
+                'dest': 'user',
+                'help': 'GitHub user'
+            }),
+            (['-r', '--repo'], {
+                'action': 'store',
+                'dest': 'repo',
+                'help': 'GitHub repo'
+            }),
+            (['-l', '--location'], {
+                'action': 'store',
+                'dest': 'location',
+                'help': 'dotfiles location'
+            }),
+            (['-s', '--ssh'], {
+                'action': 'store_true',
+                'dest': 'ssh',
+                'help': 'Use ssh'
+            })
+        ]
 
     @expose(hide=True)
     def default(self):
-        print('cloning')
+        pargs = self.app.pargs
+        github_user = pargs.user
+        if not github_user:
+            github_user = input('GitHub User [' + getpass.getuser() + ']: ')
+        github_user = getpass.getuser()
+        github_repo = pargs.repo
+        if not github_repo:
+            github_repo = input('GitHub Repo [dotfiles]: ')
+        if not github_repo:
+            github_repo = 'dotfiles'
+        location = pargs.location
+        if not location:
+            location = input('Location [' + os.getcwd() + ']: ')
+        if not location:
+            location = os.getcwd()
+        git_service.clone(
+            github_user=github_user,
+            github_repo=github_repo,
+            location=location,
+            ssh=pargs.ssh
+        )
