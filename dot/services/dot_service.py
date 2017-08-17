@@ -1,16 +1,17 @@
 from print_service import wait
-from os import path
+from os import path, remove, symlink
 from shutil import rmtree
-from os import remove
+from glob import glob
 import yaml
+import re
 
 def clean():
     paths = [
         path.abspath(path.join(path.expanduser('~'), '.dotfiles'))
     ]
-    config = get_config()
-    if 'location' in config:
-        paths.append(config['location'])
+    location = get_prop('location', silent=True)
+    if location:
+        paths.append(location)
     return wait('Cleaning . . .', lambda: run_clean(paths))
 
 def run_clean(paths):
@@ -39,3 +40,48 @@ def update_config(prop, value):
     config[prop] = value
     with open(p, 'w') as f:
         yaml.dump(config, f, default_flow_style=False)
+
+def get_dotfiles():
+    dotfiles = list()
+    ignore_list = [
+        '.gitignore',
+        '.git',
+        '.editorconfig',
+        '.zshrc'
+    ]
+    location = get_prop('location')
+    for p in glob((location + '/.*').replace('//', '/')):
+        matches = re.findall(r'\/\..+', p)
+        if len(matches) > 0:
+            dotfile = matches[0][1:]
+            ignore = False
+            for i in ignore_list:
+                if dotfile == i:
+                    ignore = True
+            if not ignore:
+                dotfiles.append(dotfile)
+    return dotfiles
+
+def get_prop(prop_name, silent=None):
+    config = get_config()
+    if prop_name not in config:
+        if silent:
+            return None
+        else:
+            sys.stderr.write('Property \'' + prop_name + '\' missing from ~/.dotfiles config')
+            return exit(1)
+    return config[prop_name]
+
+def symlink_dotfiles():
+    return wait('Symlinking . . .', lambda: run_symlink_dotfiles())
+
+def run_symlink_dotfiles():
+    location = get_prop('location')
+    symlinks = list()
+    for dotfile in get_dotfiles():
+        source = path.join(location, dotfile)
+        link_name = path.join(path.expanduser('~'), dotfile)
+        if not path.exists(link_name):
+            symlink(source, link_name)
+            symlinks.append((source, link_name))
+    return symlinks

@@ -1,5 +1,5 @@
 from cement.core.controller import CementBaseController, expose
-from services import git_service
+from services import git_service, dot_service
 from six.moves import input
 import os
 import getpass
@@ -50,9 +50,10 @@ class CloneController(CementBaseController):
             location = input('Location [' + os.getcwd() + ']: ')
         if not location:
             location = os.getcwd()
-        return git_service.clone(
+        git_service.clone(
             github_user=github_user,
             github_repo=github_repo,
             location=location,
             http=pargs.http
         )
+        return dot_service.symlink_dotfiles()
