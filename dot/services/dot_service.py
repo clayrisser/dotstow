@@ -1,5 +1,5 @@
 from print_service import wait
-from os import path, remove, symlink
+from os import path, remove, symlink, unlink
 from shutil import rmtree
 from glob import glob
 import yaml
@@ -12,6 +12,10 @@ def clean():
     location = get_prop('location', silent=True)
     if location:
         paths.append(location)
+        for dotfile in get_dotfiles():
+            link_name = path.join(path.expanduser('~'), dotfile)
+            if path.islink(link_name):
+                unlink(link_name)
     return wait('Cleaning . . .', lambda: run_clean(paths))
 
 def run_clean(paths):
@@ -82,6 +86,8 @@ def run_symlink_dotfiles():
         source = path.join(location, dotfile)
         link_name = path.join(path.expanduser('~'), dotfile)
         if not path.exists(link_name):
+            if path.islink(link_name):
+                unlink(link_name)
             symlink(source, link_name)
             symlinks.append((source, link_name))
     return symlinks
