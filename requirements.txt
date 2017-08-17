@@ -1,4 +1,7 @@
 cement==2.10.2
+futures==3.1.1
 gitdb2==2.0.2
 GitPython==2.1.5
+pyspin==1.1.1
+six==1.10.0
 smmap2==2.0.3

@@ -26,10 +26,10 @@ class CloneController(CementBaseController):
                 'dest': 'location',
                 'help': 'dotfiles location'
             }),
-            (['-s', '--ssh'], {
+            (['-s', '--http'], {
                 'action': 'store_true',
-                'dest': 'ssh',
-                'help': 'Use ssh'
+                'dest': 'http',
+                'help': 'Use http instead of ssh'
             })
         ]
 
@@ -50,9 +50,9 @@ class CloneController(CementBaseController):
             location = input('Location [' + os.getcwd() + ']: ')
         if not location:
             location = os.getcwd()
-        git_service.clone(
+        return git_service.clone(
             github_user=github_user,
             github_repo=github_repo,
             location=location,
-            ssh=pargs.ssh
+            http=pargs.http
         )

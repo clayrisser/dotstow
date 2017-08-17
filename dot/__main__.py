@@ -3,6 +3,7 @@ from config import NAME, BANNER
 from controllers import (
     AddController,
     BaseController,
+    CleanController,
     CloneController,
     InitController,
     PullController,
@@ -15,6 +16,7 @@ class App(CementApp):
         base_controller = BaseController
         handlers = [
             AddController,
+            CleanController,
             CloneController,
             InitController,
             PullController,
