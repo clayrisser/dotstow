@@ -4,6 +4,7 @@ from shutil import rmtree
 from glob import glob
 import yaml
 import re
+import sys
 
 def clean():
     paths = [
@@ -72,7 +73,7 @@ def get_prop(prop_name, silent=None):
         if silent:
             return None
         else:
-            sys.stderr.write('Property \'' + prop_name + '\' missing from ~/.dotfiles config')
+            sys.stderr.write('Property \'' + prop_name + '\' missing from ~/.dotfiles config\n')
             return exit(1)
     return config[prop_name]
 

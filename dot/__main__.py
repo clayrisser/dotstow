@@ -1,13 +1,14 @@
 from cement.core.foundation import CementApp
 from config import NAME, BANNER
 from controllers import (
-    AddController,
     BaseController,
     CleanController,
     CloneController,
-    InitController,
     PullController,
-    PushController
+    PushController,
+    StageController,
+    SymlinkController,
+    SyncController
 )
 
 class App(CementApp):
@@ -15,12 +16,13 @@ class App(CementApp):
         label = NAME
         base_controller = BaseController
         handlers = [
-            AddController,
             CleanController,
             CloneController,
-            InitController,
             PullController,
-            PushController
+            PushController,
+            StageController,
+            SymlinkController,
+            SyncController
         ]
 
 def main():

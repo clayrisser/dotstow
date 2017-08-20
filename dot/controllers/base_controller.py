@@ -7,4 +7,4 @@ class BaseController(CementBaseController):
 
     @expose(hide=True)
     def default(self):
-        print('hello ')
+        return

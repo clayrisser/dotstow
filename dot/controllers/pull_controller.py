@@ -1,4 +1,5 @@
 from cement.core.controller import CementBaseController, expose
+from services import git_service
 
 class PullController(CementBaseController):
     class Meta:
@@ -9,4 +10,4 @@ class PullController(CementBaseController):
 
     @expose(hide=True)
     def default(self):
-        print('pulling')
+        git_service.pull()

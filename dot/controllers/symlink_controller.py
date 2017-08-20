@@ -1,12 +1,13 @@
 from cement.core.controller import CementBaseController, expose
+from services import dot_service
 
-class AddController(CementBaseController):
+class SymlinkController(CementBaseController):
     class Meta:
-        label = 'add'
-        description = 'Add and remove dotfiles'
+        label = 'symlink'
+        description = 'Symlic dotfiles'
         stacked_on = 'base'
         stacked_type = 'nested'
 
     @expose(hide=True)
     def default(self):
-        print('adding and removing')
+        dot_service.symlink_dotfiles()

@@ -1,4 +1,5 @@
 from cement.core.controller import CementBaseController, expose
+from services import git_service
 
 class PushController(CementBaseController):
     class Meta:
@@ -9,4 +10,4 @@ class PushController(CementBaseController):
 
     @expose(hide=True)
     def default(self):
-        print('pushing')
+        git_service.push()

@@ -30,6 +30,11 @@ class CloneController(CementBaseController):
                 'action': 'store_true',
                 'dest': 'http',
                 'help': 'Use http instead of ssh'
+            }),
+            (['-p', '--password'], {
+                'action': 'store_true',
+                'dest': 'password',
+                'help': 'GitHub password'
             })
         ]
 
@@ -39,7 +44,8 @@ class CloneController(CementBaseController):
         github_user = pargs.user
         if not github_user:
             github_user = input('GitHub User [' + getpass.getuser() + ']: ')
-        github_user = getpass.getuser()
+        if not github_user:
+            github_user = getpass.getuser()
         github_repo = pargs.repo
         if not github_repo:
             github_repo = input('GitHub Repo [dotfiles]: ')
@@ -50,10 +56,18 @@ class CloneController(CementBaseController):
             location = input('Location [' + os.getcwd() + ']: ')
         if not location:
             location = os.getcwd()
+        http = pargs.http
+        github_password=''
+        if http:
+            if pargs.password:
+                github_password = pargs.password
+            else:
+                github_password = input('GitHub Password: ')
         git_service.clone(
             github_user=github_user,
             github_repo=github_repo,
             location=location,
-            http=pargs.http
+            github_password=github_password,
+            http=http
         )
         return dot_service.symlink_dotfiles()

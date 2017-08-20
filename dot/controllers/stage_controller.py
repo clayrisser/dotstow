@@ -1,12 +1,13 @@
 from cement.core.controller import CementBaseController, expose
+from services import git_service
 
-class InitController(CementBaseController):
+class StageController(CementBaseController):
     class Meta:
-        label = 'init'
-        description = 'Initialize dotfiles'
+        label = 'stage'
+        description = 'Stage dotfiles'
         stacked_on = 'base'
         stacked_type = 'nested'
 
     @expose(hide=True)
     def default(self):
-        print('initing')
+        git_service.stage()
