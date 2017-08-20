@@ -1,7 +1,7 @@
 dotcli *Beta*
 ================
 
-A git inspired CLI to manage your dotfiles
+A git backed CLI to manage your dotfiles
 
 Please ★ this repo if you found it useful ★ ★ ★
 
