@@ -87,9 +87,9 @@ Credits
 Changelog
 ---------
 
-0.1.0 (2017-08-20) \* Beta release
+0.1.0 (2017-08-20) * Beta release
 
-0.0.1 (2017-08-17) \* Alpha release
+0.0.1 (2017-08-17) * Alpha release
 
 .. _Git: https://git-scm.com/
 .. _Python: https://www.python.org/
