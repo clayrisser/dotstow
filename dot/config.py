@@ -2,7 +2,7 @@ NAME = 'dot'
 
 AUTHOR = 'Jam Risser'
 
-VERSION = '0.0.0'
+VERSION = '0.1.6'
 
 COPYRIGHT = '2017'
 

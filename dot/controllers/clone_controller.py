@@ -1,5 +1,5 @@
 from cement.core.controller import CementBaseController, expose
-from services import git_service, dot_service
+from dot.services import git_service, dot_service
 from six.moves import input
 import os
 import getpass

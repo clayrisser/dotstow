@@ -1,5 +1,5 @@
 from cement.core.controller import CementBaseController, expose
-from services import dot_service, git_service
+from dot.services import dot_service, git_service
 
 class SyncController(CementBaseController):
     class Meta:

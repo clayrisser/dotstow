@@ -16,7 +16,17 @@ freeze:
 	@env/bin/pip freeze > ./requirements.txt
 	@echo froze requirements
 
+dist: env
+	@python setup.py sdist
+	@python setup.py bdist_wheel
+	@echo ran dist
+
+.PHONY: publish
+publish: dist
+	@twine upload dist/*
+	@echo published
+
 .PHONY: clean
 clean:
-	-@rm -rf ./env ./*/*.pyc ./*/*/*.pyc &>/dev/null || true
+	-@rm -rf ./env ./dist ./build ./dotcli.egg-info ./*/*.pyc ./*/*/*.pyc &>/dev/null || true
 	@echo cleaned

@@ -1,5 +1,5 @@
 from cement.core.controller import CementBaseController, expose
-from services import dot_service
+from dot.services import dot_service
 
 class SymlinkController(CementBaseController):
     class Meta:

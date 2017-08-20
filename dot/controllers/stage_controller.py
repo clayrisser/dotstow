@@ -1,5 +1,5 @@
 from cement.core.controller import CementBaseController, expose
-from services import git_service
+from dot.services import git_service
 
 class StageController(CementBaseController):
     class Meta:
