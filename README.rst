@@ -19,11 +19,16 @@ Installation
 .. code:: sh
 
        sudo pip install dot
-       dot clone
 
 
 Usage
 ------------
+
+Run the following to connect your dotfiles repo
+
+.. code:: sh
+
+       dot clone
 
 Run the following every time you make changes
 
@@ -35,6 +40,8 @@ Run the following every time you make changes
 Dependencies
 ------------
 
+-  `Git`_
+-  Dotfiles git repo
 -  `Python`_
 
 
@@ -84,6 +91,7 @@ Changelog
 
 0.0.1 (2017-08-17) \* Alpha release
 
+.. _Git: https://git-scm.com/
 .. _Python: https://www.python.org/
 .. _issue: https://github.com/jamrizzi/dot/issues/new
 .. _Add some fuel: https://pay.jamrizzi.com
