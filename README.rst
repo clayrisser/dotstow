@@ -18,7 +18,7 @@ Installation
 
 .. code:: sh
 
-       sudo pip install dot
+       sudo pip install dotcli
 
 
 Usage
