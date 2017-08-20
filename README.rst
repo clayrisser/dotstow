@@ -1,4 +1,4 @@
-dot *Beta*
+dotcli *Beta*
 ================
 
 A git inspired CLI to manage your dotfiles
