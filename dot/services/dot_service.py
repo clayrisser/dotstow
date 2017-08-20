@@ -51,8 +51,7 @@ def get_dotfiles():
     ignore_list = [
         '.gitignore',
         '.git',
-        '.editorconfig',
-        '.zshrc'
+        '.editorconfig'
     ]
     location = get_prop('location')
     for p in glob((location + '/.*').replace('//', '/')):
