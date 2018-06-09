@@ -28,7 +28,9 @@ pip3 install dotstow
 
 ## Usage
 
-[Contribute](https://github.com/codejamninja/dotstow/blob/master/CONTRIBUTING.md) usage docs
+```sh
+dotstow zsh
+```
 
 
 ## Support
