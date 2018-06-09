@@ -1,101 +1,81 @@
-dotcli *Beta*
-================
+dotstow
+=======
 
-A git backed CLI to manage your dotfiles
+`GitHub stars <https://github.com/codejamninja/dotstow>`__
+
+   Manage dotfiles with stow
 
 Please ★ this repo if you found it useful ★ ★ ★
-
 
 Features
 --------
 
--  Sync with git
--  Automatic symlinking
-
+-  Group dotfiles into modular units
+-  Automatically symlink files
+-  Backup dotfiles with git
 
 Installation
 ------------
 
 .. code:: sh
 
-       sudo pip install dotcli
-
-
-Usage
-------------
-
-Run the following to connect your dotfiles repo
-
-.. code:: sh
-
-       dot clone
-
-Run the following every time you make changes
-
-.. code:: sh
-
-       dot sync
-
+   pip3 install dotstow
 
 Dependencies
 ------------
 
--  `Git`_
--  Dotfiles git repo
--  `Python`_
+-  `Python 3 <https://www.python.org>`__
 
+Usage
+-----
+
+`Contribute <https://github.com/codejamninja/dotstow/blob/master/CONTRIBUTING.md>`__
+usage docs
 
 Support
 -------
 
-Submit an `issue`_
+Submit an `issue <https://github.com/codejamninja/dotstow/issues/new>`__
 
+Screenshots
+-----------
 
-Buy Me Coffee
--------------
-
-A ridiculous amount of coffee was consumed in the process of building
-this project.
-
-`Add some fuel`_ if you’d like to keep me going!
-
+`Contribute <https://github.com/codejamninja/dotstow/blob/master/CONTRIBUTING.md>`__
+a screenshot
 
 Contributing
 ------------
 
-1. Fork it!
-2. Create your feature branch: ``git checkout -b my-new-feature``
-3. Commit your changes: ``git commit -m 'Add some feature'``
-4. Push to the branch: ``git push origin my-new-feature``
-5. Submit a pull request :D
-
+Review the `guidelines for
+contributing <https://github.com/codejamninja/dotstow/blob/master/CONTRIBUTING.md>`__
 
 License
 -------
 
-`MIT License`_
+`MIT
+License <https://github.com/codejamninja/dotstow/blob/master/LICENSE>`__
 
-`Jam Risser`_ © 2017
-
-
-Credits
--------
-
--  `Jam Risser`_ - Author
-
+`Jam Risser <https://codejam.ninja>`__ © 2018
 
 Changelog
 ---------
 
-0.1.0 (2017-08-20)
--  Beta release
+Review the
+`changelog <https://github.com/codejamninja/dotstow/blob/master/CHANGELOG.md>`__
 
-0.0.1 (2017-08-17)
--  Alpha release
+Credits
+-------
 
-.. _Git: https://git-scm.com/
-.. _Python: https://www.python.org/
-.. _issue: https://github.com/jamrizzi/dot/issues/new
-.. _Add some fuel: https://pay.jamrizzi.com
-.. _MIT License: https://github.com/jamrizzi/dot/blob/master/LICENSE
-.. _Jam Risser: https://jamrizzi.com
+-  `Jam Risser <https://codejam.ninja>`__ - Author
+
+Support on Liberapay
+--------------------
+
+A ridiculous amount of coffee ☕ ☕ ☕ was consumed in the process of
+building this project.
+
+`Add some fuel <https://liberapay.com/codejamninja/donate>`__ if you’d
+like to keep me going!
+
+`Liberapay receiving <https://liberapay.com/codejamninja/donate>`__
+`Liberapay patrons <https://liberapay.com/codejamninja/donate>`__

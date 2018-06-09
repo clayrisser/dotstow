@@ -1,24 +1,46 @@
-SHELL := /bin/bash
 CWD := $(shell pwd)
 
-all: env
+.PHONY: all
+all: clean
 
-start:
-	@python ./dot/ --help
+.PHONY: start
+start: env
+	@env/bin/python3 dotstow zsh
+
+.PHONY: debug
+debug: env
+	@env/bin/python3 dotstow --debug
+
+.PHONY: help
+help: env
+	@env/bin/python3 dotstow --help
+
+.PHONY: install
+install: env
+
+.PHONY: uninstall
+uninstall:
+	-@rm -rf env >/dev/null || true
+
+.PHONY: reinstall
+reinstall: uninstall install
 
 env:
 	@virtualenv env
-	@env/bin/pip install -r ./requirements.txt
-	@echo created virtualenv
+	@env/bin/pip3 install -r ./requirements.txt
+	@echo ::: ENV :::
 
 .PHONY: freeze
 freeze:
-	@env/bin/pip freeze > ./requirements.txt
-	@echo froze requirements
+	@env/bin/pip3 freeze > ./requirements.txt
+	@echo ::: FREEZE :::
 
-dist: env
-	@python setup.py sdist
-	@python setup.py bdist_wheel
+.PHONY: build
+build: dist
+
+dist: clean install
+	@env/bin/python3 setup.py sdist
+	@env/bin/python3 setup.py bdist_wheel
 	@echo ran dist
 
 .PHONY: publish
@@ -26,7 +48,16 @@ publish: dist
 	@twine upload dist/*
 	@echo published
 
+.PHONY: link
+link: install
+	@pip3 install -e .
+
+.PHONY: unlink
+unlink: install
+	@rm -r $(shell find . -name '*.egg-info')
+
 .PHONY: clean
 clean:
-	-@rm -rf ./env ./dist ./build ./dotcli.egg-info ./*/*.pyc ./*/*/*.pyc &>/dev/null || true
-	@echo cleaned
+	-@rm -rf */__pycache__ */*/__pycache__ README.rst dist build \
+		example/.tmp *.egg-info >/dev/null || true
+	@echo ::: CLEAN :::

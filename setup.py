@@ -1,32 +1,37 @@
-from setuptools import setup, find_packages
 from codecs import open
 from os import path
-from dot import config
+from setuptools import setup, find_packages
+from subprocess import check_output
 
 here = path.abspath(path.dirname(__file__))
+
+check_output(
+    'pandoc --from=markdown --to=rst --output=' + path.join(here, 'README.rst') + ' ' + path.join(here, 'README.md'),
+    shell=True
+)
 
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 install_requires = list()
-with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
+with open(path.join(here, 'requirements.txt'), 'r', encoding='utf-8') as f:
     for line in f.readlines():
         install_requires.append(line)
 
 setup(
-    name='dotcli',
+    name='dotstow',
 
-    version=config.VERSION,
+    version='0.0.1',
 
-    description='A git inspired CLI to manage your dotfiles',
+    description='Manage dotfiles with stow',
 
     long_description=long_description,
 
-    url='https://github.com/jamrizzi/dot',
+    url='https://github.com/codejamninja/dotstow',
 
     author='Jam Risser',
 
-    author_email='jam@jamrizzi.com',
+    author_email='jam@codejam.ninja',
 
     license='MIT',
 
@@ -44,13 +49,15 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
 
-    keywords='cli git github dot dotfiles sync symlink command line',
+    keywords='ubuntu remaster fork install linux',
 
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
     install_requires=install_requires,
 
+    include_package_data=True,
+
     entry_points = {
-        'console_scripts': ['dot=dot.__main__:main'],
+        'console_scripts': ['dotstow=dotstow.__main__:main'],
     }
 )
