@@ -36,11 +36,6 @@ pip3 install dotstow
 Submit an [issue](https://github.com/codejamninja/dotstow/issues/new)
 
 
-## Screenshots
-
-[Contribute](https://github.com/codejamninja/dotstow/blob/master/CONTRIBUTING.md) a screenshot
-
-
 ## Contributing
 
 Review the [guidelines for contributing](https://github.com/codejamninja/dotstow/blob/master/CONTRIBUTING.md)
