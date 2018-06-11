@@ -12,7 +12,6 @@ Please ★ this repo if you found it useful ★ ★ ★
 * Group dotfiles into units (stow packages)
 * Automatically symlink (stow) files
 * Backup dotfiles with git
-* Powered by [GNU Stow](https://www.gnu.org/software/stow/)
 
 
 ## Installation
