@@ -21,7 +21,7 @@ with open(path.join(here, 'requirements.txt'), 'r', encoding='utf-8') as f:
 setup(
     name='dotstow',
 
-    version='0.1.3',
+    version='0.1.4',
 
     description='Manage dotfiles with stow',
 
