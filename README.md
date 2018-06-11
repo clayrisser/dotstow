@@ -36,7 +36,7 @@ stow packages (subfolders) instead of the root of your repo. This prevents clutt
 directory with unwanted files, like your `README.md`. It also enables you to only install dotfiles
 you want on that computer.
 
-#### Setup
+### Setup
 
 Create a remote dotfiles repo. You can create one at [GitHub](https://github.com/new).
 
@@ -45,19 +45,19 @@ Run the following command
 dotstow sync
 ```
 
-#### Creating a stow package
+### Creating a stow package
 
 ```sh
 mkdir ~/.dotfiles/my-stow-package
 ```
 
-#### Adding dotfiles to stow package
+### Adding dotfiles to stow package
 
 ```sh
 mv ~/.some-dotfile ~/.dotfiles/my-stow-package
 ```
 
-#### Symlink stow package
+### Symlink stow package
 
 Note that this will fail if conflicting files exist in the home directory.
 
@@ -65,7 +65,7 @@ Note that this will fail if conflicting files exist in the home directory.
 dotstow my-stow-package
 ```
 
-#### Syncing dotfiles
+### Syncing dotfiles
 
 ```sh
 dotstow sync
