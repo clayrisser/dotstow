@@ -23,14 +23,14 @@ class Git(Service):
         spinner = self.app.spinner
         home_path = path.expanduser("~")
         dotfiles_path = path.join(home_path, '.dotfiles')
-        spinner.start('cloning dotfiles')
+        spinner.start('cloning dotfiles to ~/.dotfiles')
         if not path.isdir(dotfiles_path):
             if path.exists(dotfiles_path):
-                spinner.fail('please remove \'' + dotfiles_path + '\'')
+                spinner.fail('please remove ~/.dotfiles')
                 exit(1)
             os.makedirs(dotfiles_path)
         result = Repo.clone_from(repo, dotfiles_path)
-        spinner.succeed('cloned dotfiles')
+        spinner.succeed('cloned dotfiles to ~/.dotfiles')
         return result
 
     def commit(self, message=None):
