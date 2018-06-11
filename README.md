@@ -59,6 +59,8 @@ mv ~/.some-dotfile ~/.dotfiles/my-stow-package
 
 ### Symlink stow package
 
+Note that this will fail if conflicting files exist in the home directory.
+
 ```sh
 dotstow my-stow-package
 ```
