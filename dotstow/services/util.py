@@ -1,5 +1,7 @@
 from cfoundation import Service
 from subprocess import check_output, CalledProcessError, STDOUT
+from munch import munchify
+import inquirer
 
 class Util(Service):
     def subproc(self, command):
@@ -23,3 +25,17 @@ class Util(Service):
             if c.debug:
                 raise err
             exit(1)
+
+
+    def prompt(self, message, default=None):
+        spinner = self.app.spinner
+        answers = None
+        spinner.stop()
+        if not default:
+            answers = munchify(inquirer.prompt([inquirer.Text('answer', message=message)]))
+        else:
+            answers = munchify(inquirer.prompt([inquirer.Text('answer', message=message + ' (' + default + ')')]))
+        spinner.start()
+        if answers.answer and len(answers.answer) > 0:
+            return answers.answer
+        return default

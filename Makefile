@@ -1,19 +1,12 @@
 CWD := $(shell pwd)
+ARGS := ""
 
 .PHONY: all
 all: clean
 
 .PHONY: start
 start: env
-	@env/bin/python3 dotstow zsh
-
-.PHONY: debug
-debug: env
-	@env/bin/python3 dotstow --debug
-
-.PHONY: help
-help: env
-	@env/bin/python3 dotstow --help
+	@env/bin/python3 dotstow $(ARGS)
 
 .PHONY: install
 install: env
