@@ -13,6 +13,10 @@ Please ★ this repo if you found it useful ★ ★ ★
 * Automatically symlink (stow) files
 * Backup dotfiles with git
 
+## Screenshots
+
+![Screenshot 1](https://user-images.githubusercontent.com/6234038/41395410-37fe7bb8-6f73-11e8-97f2-c950da80dab3.jpg)
+
 
 ## Installation
 
