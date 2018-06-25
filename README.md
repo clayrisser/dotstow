@@ -40,16 +40,20 @@ directory with unwanted files, like your `README.md`. It also enables you to onl
 you want on that computer.
 
 The idea behind dotstow is twofold:
-a) you don't need to maintain a shell script that symlinks all of your dotfiles to the correct places in your HOME directory upon a new dotfile install
-b) individual directories in you .dotfiles become packages that can be installed independently using `dotstow [package]`
+  1. You don't need to maintain a shell script that symlinks all of your dotfiles to the correct
+  places in your $HOME directory upon a new dotfile install
+  2. Individual directories in you .dotfiles become packages that can be installed independently
+  using `dotstow [package]`
 
 For example:
 
 When setting up your dotfiles on a new computer
-1. run dotstow, give it your dotfiles github repo link, watch as it's cloned in `~/.dotfiles`
-2. `cd ~/.dotfiles` and `dotstow zsh emacs vim ...` etc for each of the stow packages you'd like to install (symlink to $HOME)
-3. When you update a file in a package, for example your `.zshrc` in `.dotfiles/zsh/`, you can `dotstow zsh` from
-`~/.dotfiles` and then `dotstow sync` to update your `zsh` package and update your linked github repo with the change
+  1. Run `dotstow sync`, give it your dotfiles github repo link, and watch as it's cloned into `~/.dotfiles`.
+  2. Run`dotstow zsh emacs vim ...` etc for each of the stow packages you'd like to install (aka symlink to $HOME).
+  3. When you __update a file__ in a package, you only need to `dotstow sync` to update your linked github repo
+  with the changes. If you __add new files__ to your stow package you will need to restow the package.
+  For example, when adding `.zshrc` to `.dotfiles/zsh/`, you will need to `dotstow zsh` to restow the package
+  and then `dotstow sync` to update your linked github repo with the changes.
 
 ### Setup
 
