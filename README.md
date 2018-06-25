@@ -39,6 +39,18 @@ stow packages (subfolders) instead of the root of your repo. This prevents clutt
 directory with unwanted files, like your `README.md`. It also enables you to only install dotfiles
 you want on that computer.
 
+The idea behind dotstow is twofold:
+a) you don't need to maintain a shell script that symlinks all of your dotfiles to the correct places in your HOME directory upon a new dotfile install
+b) individual directories in you .dotfiles become packages that can be installed independently using `dotstow [package]`
+
+For example:
+
+When setting up your dotfiles on a new computer
+1. run dotstow, give it your dotfiles github repo link, watch as it's cloned in `~/.dotfiles`
+2. `cd ~/.dotfiles` and `dotstow zsh emacs vim ...` etc for each of the stow packages you'd like to install (symlink to $HOME)
+3. When you update a file in a package, for example your `.zshrc` in `.dotfiles/zsh/`, you can `dotstow zsh` from
+`~/.dotfiles` and then `dotstow sync` to update your `zsh` package and update your linked github repo with the change
+
 ### Setup
 
 Create a remote dotfiles repo. You can create one at [GitHub](https://github.com/new).
