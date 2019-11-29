@@ -7,14 +7,9 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.py]
+[*.{js,jsx,ts,tsx,json}]
 charset = utf-8
-indent_size = 4
 
-[*.{md,rst}]
+[*.md]
 charset = utf-8
 trim_trailing_whitespace = false
-
-[{m,M}akefile]
-charset = utf-8
-indent_style = tab
