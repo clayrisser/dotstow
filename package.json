@@ -47,6 +47,7 @@
     "@oclif/config": "^1.13.3",
     "@oclif/errors": "^1.2.2",
     "@oclif/parser": "^3.8.4",
+    "@oclif/plugin-autocomplete": "^0.1.4",
     "core-js": "^3.3.6",
     "err": "^2.1.11",
     "execa": "^3.4.0",
@@ -88,6 +89,7 @@
     "commands": "./lib/commands",
     "bin": "dotstow",
     "plugins": [
+      "@oclif/plugin-autocomplete",
       "@oclif/plugin-help"
     ]
   },
