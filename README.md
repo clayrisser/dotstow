@@ -8,6 +8,11 @@ Please ★ this repo if you found it useful ★ ★ ★
 
 Windows support has not been tested.
 
+## Related Projects
+
+You can see my dotfiles (which are using dotstow) at the link below.
+[github.com/codejamninja/dotfiles](https://github.com/codejamninja/dotfiles)
+
 ## Features
 
 - Group dotfiles into units (stow packages)
