@@ -6,10 +6,15 @@
 
 Please ★ this repo if you found it useful ★ ★ ★
 
+Windows support has not been tested.
+
 ## Features
 
-- supports multiple operating systems
-- supports simultaneous configurations
+* Group dotfiles into units (stow packages)
+* Automatically symlink (stow) files
+* Backup dotfiles with git
+* Keep track of simultaneous dotfile configurations for multiple environments
+* Supports shell autocompletion
 
 ## Installation
 
@@ -24,7 +29,154 @@ npm install -g dotstow
 
 ## Usage
 
-[Contribute](https://github.com/codejamninja/dotstow/blob/master/CONTRIBUTING.md) usage docs
+Note that unlike many dotfile syncing tools, this is powered by
+[GNU Stow](https://www.gnu.org/software/stow). This means your dotfiles must be stored inside
+stow packages (subfolders) instead of the root of your repo. This prevents cluttering your home
+directory with unwanted files, like your `README.md`. It also enables you to only install dotfiles
+you want on that computer.
+
+The idea behind dotstow is twofold:
+  1. You don't need to maintain a shell script that symlinks all of your dotfiles to the correct
+  places in your $HOME directory upon a new dotfile install
+  2. Individual directories in you .dotfiles become packages that can be installed independently
+  using `dotstow stow [package]`
+
+For example:
+
+When setting up your dotfiles on a new computer
+  1. Run `dotstow sync`, give it your dotfiles github repo link, and watch as it's cloned into `~/.dotfiles`.
+  2. Run`dotstow stow zsh emacs vim ...` etc for each of the stow packages you'd like to install (aka symlink to $HOME).
+  3. When you __update a file__ in a package, you only need to `dotstow sync` to update your linked github repo
+  with the changes. If you __add new files__ to your stow package you will need to restow the package.
+  For example, when adding `.zshrc` to `.dotfiles/globals/zsh/`, you will need to `dotstow stow zsh` to restow the package
+  and then `dotstow sync` to update your linked github repo with the changes.
+
+```
+USAGE
+  $ dotstow [COMMAND]
+
+COMMANDS
+  autocomplete  display autocomplete installation instructions
+  help          display help for dotstow
+  stow          stow dotfiles
+  sync          sync dotfiles
+```
+
+### Environments
+
+Environments is how dotstow lets you have multiple configurations for a single package. This is extremely useful
+if you have multiple operating systems that require slighty different configurations, but you still want to
+keep all your dotfiles togather. Dotstow tries to guess your environment. You can always force an environment
+by using the `--environment` flag, for example `--environment=ubuntu`.
+
+Dotstow first tries to guess the environment by looking for a package in the folder with the name or your hostname.
+I name my computers after famous dragons, so if my hostname was `drogon` it would look in `~/.dotfiles/drogon` for
+the package.
+
+If the package is not found, dotstow will proceed to look for a package in a folder with the type of the operating
+you are using. For example, if you were running `ubuntu`, dotstow would look in `~/.dotfiles/ubuntu`, `~/.dotfiles/debian`,
+`~/.dotfiles/linux` and `~/.dotfiles/unix` for the package.
+
+Dotstow can guess multiple operating systems.
+
+```
+aix
+amigaos
+android
+beos
+bsd
+centos
+darwin
+debian
+fedora
+freebsd
+ios
+linux
+mac
+nintendo
+openbsd
+osx
+redhat
+rhel
+slackware
+starBlade
+sunos
+ubuntu
+unix
+value
+win
+win32
+win64
+windows
+```
+
+### Stow
+
+```
+USAGE
+  $ dotstow stow PACKAGES...
+
+OPTIONS
+  -d, --dotfiles=dotfiles
+  -e, --environment=environment
+  -f, --force
+  -s, --sync
+  --debug
+
+EXAMPLE
+  $ dotstow stow
+```
+
+### Sync
+
+```
+USAGE
+  $ dotstow sync
+
+OPTIONS
+  -d, --debug
+
+EXAMPLE
+  $ dotstow sync
+```
+
+### Autocompletion
+
+If you want to enable shell autocompletion, simply run the following command
+and follow the instructions. Most standard shells are supported, such as
+`bash` and `zsh`.
+
+```
+USAGE
+  $ dotstow autocomplete [SHELL]
+
+ARGUMENTS
+  SHELL  shell type
+
+OPTIONS
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
+
+EXAMPLES
+  $ dotstow autocomplete
+  $ dotstow autocomplete bash
+  $ dotstow autocomplete zsh
+  $ dotstow autocomplete --refresh-cache
+```
+
+## Migration
+
+### Python dotstow
+
+If you were using the python version of dotstow, you should upgrade to
+this version to get the benefits of multiple environments. If you switch
+you will have to move your stash plugins into an environment folder (`global` is recommended).
+
+You can do that by running the following commands.
+```sh
+mkdir ~/tmp_global
+mv ~/.dotfiles/* ~/tmp_global
+mv ~/tmp_global mkdir ~/.dotfiles/global
+```
 
 ## Support
 
