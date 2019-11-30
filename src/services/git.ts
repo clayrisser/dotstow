@@ -1,6 +1,7 @@
 import path from 'path';
-import { Clone, Cred, Reference, Repository, Signature } from 'nodegit';
-import { homedir } from 'os';
+import { Clone, Cred, Repository, Signature } from 'nodegit';
+import { createInterface as createReadlineInterface } from 'readline';
+import { homedir, userInfo } from 'os';
 import { Options } from '../types';
 
 function getCredentials() {
@@ -34,15 +35,20 @@ export default class Git {
   }
 
   async clone(remote: string) {
-    await Clone.clone(remote, this.dotfilesPath);
+    await Clone.clone(remote, this.dotfilesPath, {
+      fetchOpts: { callbacks: { credentials: getCredentials() } }
+    });
   }
 
-  async commit(message?: string) {
+  async commit(message?: string): Promise<number> {
     const repo = await Repository.open(this.dotfilesPath);
     const signature = await ((Signature.default(repo) as unknown) as Promise<
       Signature
     >);
     const index = await repo.refreshIndex();
+    const head = await repo.getHeadCommit();
+    const changeCount = (await repo.getStatus()).length;
+    if (!changeCount) return changeCount;
     await index.addAll();
     index.write();
     const oid = await index.writeTree();
@@ -52,8 +58,9 @@ export default class Git {
       signature,
       message || 'updated dotfiles',
       oid,
-      [await repo.getCommit(await Reference.nameToId(repo, 'HEAD'))]
+      [await repo.getCommit(head)]
     );
+    return changeCount;
   }
 
   async pull(branch = this.branch) {
@@ -69,6 +76,37 @@ export default class Git {
     const remote = await repo.getRemote(this.remote);
     await remote.push([`refs/heads/${branch}:refs/heads/${branch}`], {
       callbacks: { credentials: getCredentials() }
+    });
+  }
+
+  async guessRemote(): Promise<string> {
+    const githubUsername = await new Promise<string>(resolve => {
+      const readline = createReadlineInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      const defaultGithubUsername = userInfo().username;
+      readline.question(
+        `github username (${defaultGithubUsername}): `,
+        (githubUsername: string) => {
+          readline.close();
+          return resolve(githubUsername || defaultGithubUsername);
+        }
+      );
+    });
+    return new Promise<string>(resolve => {
+      const readline = createReadlineInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      const defaultRemote = `git@github.com:${githubUsername}/dotfiles.git`;
+      readline.question(
+        `dotfiles remote (${defaultRemote}): `,
+        (remote: string) => {
+          readline.close();
+          return resolve(remote || defaultRemote);
+        }
+      );
     });
   }
 }
