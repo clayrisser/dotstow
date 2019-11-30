@@ -1,10 +1,16 @@
+import Err from 'err';
 import execa from 'execa';
+import fs from 'fs-extra';
 import path from 'path';
-import { homedir } from 'os';
+import { homedir, hostname } from 'os';
+import { mapSeries } from 'bluebird';
 import { Options } from '../types';
+import { OS } from '.';
 
 export default class Stow {
   dotfilesPath: string;
+
+  _platforms: string[];
 
   constructor(public options: Options = {}) {
     this.dotfilesPath = path.resolve(
@@ -13,13 +19,102 @@ export default class Stow {
     );
   }
 
-  async stow(packages: string[]) {
-    await execa(
-      'stow',
-      ['-t', homedir(), '-d', this.dotfilesPath, ...packages],
-      {
-        stdio: 'inherit'
+  get packages(): string[] {
+    return fs.readdirSync(this.dotfilesPath).filter((name: string) => {
+      if (!name.length || name[0] === '.' || name[0] === '_') {
+        return false;
       }
+      return fs.statSync(path.resolve(this.dotfilesPath, name)).isDirectory();
+    });
+  }
+
+  get platforms(): string[] {
+    if (this._platforms) return this._platforms;
+    const os = new OS();
+    this._platforms = [
+      ...new Set([
+        os.value,
+        ...Object.entries(os.info).reduce(
+          (
+            platforms: string[],
+            [platform, value]: [string, boolean | string]
+          ) => {
+            if (value === true) platforms.push(platform);
+            return platforms;
+          },
+          []
+        )
+      ])
+    ];
+    return this._platforms;
+  }
+
+  containsPackage(environment: string, packageName?: string): boolean {
+    if (!packageName) return true;
+    return fs.pathExistsSync(
+      path.resolve(this.dotfilesPath, environment, packageName)
     );
+  }
+
+  getEnvironment(packageName?: string): string {
+    const environments = fs
+      .readdirSync(this.dotfilesPath)
+      .filter((name: string) => {
+        if (!name.length || name[0] === '.' || name[0] === '_') {
+          return false;
+        }
+        return fs.statSync(path.resolve(this.dotfilesPath, name)).isDirectory();
+      });
+    if (!environments.length) throw new Err('please create an environment');
+    if (
+      this.options.environment &&
+      environments.includes(this.options.environment) &&
+      this.containsPackage(this.options.environment, packageName)
+    ) {
+      return this.options.environment;
+    }
+    if (
+      environments.includes(hostname()) &&
+      this.containsPackage(hostname(), packageName)
+    ) {
+      return hostname();
+    }
+    for (let i = 0; i < this.platforms.length; i++) {
+      if (
+        environments.includes(this.platforms?.[i]) &&
+        this.containsPackage(this.platforms?.[i], packageName)
+      ) {
+        return this.platforms[i];
+      }
+    }
+    if (
+      environments.includes('global') &&
+      this.containsPackage('global', packageName)
+    ) {
+      return 'global';
+    }
+    if (!this.containsPackage('global', packageName)) {
+      throw new Err(`package '${packageName}' not found`, 404);
+    }
+    return environments[0];
+  }
+
+  async stow(packages: string[]) {
+    await mapSeries(packages, async (packageName: string) => {
+      const environment = this.getEnvironment(packageName);
+      await execa(
+        'stow',
+        [
+          '-t',
+          homedir(),
+          '-d',
+          path.resolve(this.dotfilesPath, environment),
+          packageName
+        ],
+        {
+          stdio: this.options.debug ? 'inherit' : 'pipe'
+        }
+      );
+    });
   }
 }
