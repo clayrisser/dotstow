@@ -5,4 +5,5 @@ export interface Options {
   environment?: string;
   force?: boolean;
   remote?: string;
+  sync?: boolean;
 }

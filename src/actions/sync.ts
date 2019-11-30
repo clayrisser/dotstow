@@ -10,25 +10,29 @@ export default async function sync(options: Options = {}): Promise<any> {
   options.dotfiles = dotfilesPath;
   const spinner = ora();
   const git = new Git(options);
-  if (await fs.pathExists(dotfilesPath)) {
-    spinner.start('pulling dotfiles');
-    await git.pull();
-    spinner.succeed('pulled dotfiles');
-  } else {
-    const remote = options.remote || (await git.guessRemote());
-    spinner.start('cloning dotfiles');
-    await git.clone(remote);
-    spinner.succeed('cloned dotfiles');
+  try {
+    if (await fs.pathExists(dotfilesPath)) {
+      spinner.start('pulling dotfiles');
+      await git.pull();
+      spinner.succeed('pulled dotfiles');
+    } else {
+      const remote = options.remote || (await git.guessRemote());
+      spinner.start('cloning dotfiles');
+      await git.clone(remote);
+      spinner.succeed('cloned dotfiles');
+    }
+    spinner.start('committing dotfiles');
+    const message = await git.commit();
+    if (message) {
+      spinner.succeed(`committed dotfiles with message "${message}"`);
+      spinner.start('pushing dotfiles');
+      await git.push();
+      spinner.succeed('pushed dotfiles');
+    } else {
+      spinner.warn('no files to commit');
+    }
+  } catch (err) {
+    if (options.debug) throw err;
+    spinner.fail(err.message);
   }
-  spinner.start('committing dotfiles');
-  const message = await git.commit();
-  if (message) {
-    spinner.succeed(`committed dotfiles with message "${message}"`);
-    spinner.start('pushing dotfiles');
-    await git.push();
-    spinner.succeed('pushed dotfiles');
-  } else {
-    spinner.warn('no files to commit');
-  }
-  return options;
 }

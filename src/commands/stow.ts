@@ -11,7 +11,8 @@ export default class Stow extends Command {
     debug: flags.boolean({ required: false }),
     dotfiles: flags.string({ char: 'd', required: false }),
     environment: flags.string({ char: 'e', required: false }),
-    force: flags.boolean({ char: 'f', required: false })
+    force: flags.boolean({ char: 'f', required: false }),
+    sync: flags.boolean({ char: 's', required: false })
   };
 
   static strict = false;
@@ -24,7 +25,8 @@ export default class Stow extends Command {
       debug: !!flags.debug,
       dotfiles: flags.dotfiles,
       environment: flags.environment,
-      force: !!flags.force
+      force: !!flags.force,
+      sync: !!flags.sync
     };
     return stow(
       options,
