@@ -73,9 +73,11 @@ COMMANDS
 ### Environments
 
 Environments is how dotstow lets you have multiple configurations for a single package. This is extremely useful
-if you have multiple operating systems that require slighty different configurations, but you still want to
-keep all your dotfiles togather. Dotstow tries to guess your environment. You can always force an environment
-by using the `--environment` flag, for example `--environment=ubuntu`.
+if you have multiple operating systems that require slighty different configurations while still keeping
+all your dotfiles togather. For example, maybe your `zsh` would be configured differently on `osx` than on `linux`.
+
+Dotstow tries to guess your environment. You can always force an environment by using the `--environment` flag,
+for example `--environment=ubuntu`.
 
 Dotstow first tries to guess the environment by looking for a package in the folder with the name or your hostname.
 I name my computers after famous dragons, so if my hostname was `drogon` it would look in `~/.dotfiles/drogon` for
