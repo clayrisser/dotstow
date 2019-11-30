@@ -14,6 +14,10 @@ You can see my dotfiles (which are using dotstow) at the link below.
 
 [github.com/codejamninja/dotfiles](https://github.com/codejamninja/dotfiles)
 
+You can read more about dotstow at the blog post below.
+
+https://dev.to/codejamninja/dotstow-the-smart-way-to-manage-your-dotfiles-25ik
+
 ## Features
 
 - Group dotfiles into units (stow packages)
