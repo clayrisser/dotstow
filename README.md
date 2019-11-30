@@ -10,11 +10,11 @@ Windows support has not been tested.
 
 ## Features
 
-* Group dotfiles into units (stow packages)
-* Automatically symlink (stow) files
-* Backup dotfiles with git
-* Keep track of simultaneous dotfile configurations for multiple environments
-* Supports shell autocompletion
+- Group dotfiles into units (stow packages)
+- Automatically symlink (stow) files
+- Backup dotfiles with git
+- Keep track of simultaneous dotfile configurations for multiple environments
+- Supports shell autocompletion
 
 ## Installation
 
@@ -36,20 +36,22 @@ directory with unwanted files, like your `README.md`. It also enables you to onl
 you want on that computer.
 
 The idea behind dotstow is twofold:
-  1. You don't need to maintain a shell script that symlinks all of your dotfiles to the correct
-  places in your $HOME directory upon a new dotfile install
-  2. Individual directories in you .dotfiles become packages that can be installed independently
-  using `dotstow stow [package]`
+
+1. You don't need to maintain a shell script that symlinks all of your dotfiles to the correct
+   places in your \$HOME directory upon a new dotfile install
+2. Individual directories in you .dotfiles become packages that can be installed independently
+   using `dotstow stow [package]`
 
 For example:
 
 When setting up your dotfiles on a new computer
-  1. Run `dotstow sync`, give it your dotfiles github repo link, and watch as it's cloned into `~/.dotfiles`.
-  2. Run`dotstow stow zsh emacs vim ...` etc for each of the stow packages you'd like to install (aka symlink to $HOME).
-  3. When you __update a file__ in a package, you only need to `dotstow sync` to update your linked github repo
-  with the changes. If you __add new files__ to your stow package you will need to restow the package.
-  For example, when adding `.zshrc` to `.dotfiles/globals/zsh/`, you will need to `dotstow stow zsh` to restow the package
-  and then `dotstow sync` to update your linked github repo with the changes.
+
+1. Run `dotstow sync`, give it your dotfiles github repo link, and watch as it's cloned into `~/.dotfiles`.
+2. Run`dotstow stow zsh emacs vim ...` etc for each of the stow packages you'd like to install (aka symlink to \$HOME).
+3. When you **update a file** in a package, you only need to `dotstow sync` to update your linked github repo
+   with the changes. If you **add new files** to your stow package you will need to restow the package.
+   For example, when adding `.zshrc` to `.dotfiles/globals/zsh/`, you will need to `dotstow stow zsh` to restow the package
+   and then `dotstow sync` to update your linked github repo with the changes.
 
 ```
 USAGE
@@ -172,6 +174,7 @@ this version to get the benefits of multiple environments. If you switch
 you will have to move your stash plugins into an environment folder (`global` is recommended).
 
 You can do that by running the following commands.
+
 ```sh
 mkdir ~/tmp_global
 mv ~/.dotfiles/* ~/tmp_global
