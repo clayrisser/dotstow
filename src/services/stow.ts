@@ -102,6 +102,12 @@ export default class Stow {
   async stow(packages: string[]) {
     await mapSeries(packages, async (packageName: string) => {
       const environment = this.getEnvironment(packageName);
+      return this.stowPackage(environment, packageName);
+    });
+  }
+
+  async stowPackage(environment: string, packageName: string) {
+    try {
       await execa(
         'stow',
         [
@@ -115,6 +121,28 @@ export default class Stow {
           stdio: this.options.debug ? 'inherit' : 'pipe'
         }
       );
-    });
+    } catch (err) {
+      if (
+        err.stderr?.indexOf('existing target is') > -1 &&
+        this.options.force
+      ) {
+        const regex = /existing\starget\sis\s.+:\s(.*)\n/g;
+        let matches = null;
+        const files = [];
+        // eslint-disable-next-line no-cond-assign
+        while ((matches = regex.exec(err.stderr || '')) !== null) {
+          files.push(matches[1]);
+          regex.lastIndex++;
+        }
+        await mapSeries(files, async file => {
+          const filePath = path.resolve(homedir(), file);
+          await fs.unlink(filePath);
+        });
+        await this.stowPackage(environment, packageName);
+      } else {
+        if (err.stderr) throw new Err(err.stderr, 400);
+        throw err;
+      }
+    }
   }
 }

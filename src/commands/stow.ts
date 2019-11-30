@@ -10,7 +10,8 @@ export default class Stow extends Command {
   static flags = {
     debug: flags.boolean({ required: false }),
     dotfiles: flags.string({ char: 'd', required: false }),
-    environment: flags.string({ char: 'e', required: false })
+    environment: flags.string({ char: 'e', required: false }),
+    force: flags.boolean({ char: 'f', required: false })
   };
 
   static strict = false;
@@ -22,7 +23,8 @@ export default class Stow extends Command {
     const options: Options = {
       debug: !!flags.debug,
       dotfiles: flags.dotfiles,
-      environment: flags.environment
+      environment: flags.environment,
+      force: !!flags.force
     };
     return stow(
       options,

@@ -3,5 +3,6 @@ export interface Options {
   debug?: boolean;
   dotfiles?: string;
   environment?: string;
+  force?: boolean;
   remote?: string;
 }
