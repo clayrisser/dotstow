@@ -189,6 +189,30 @@ mv ~/.dotfiles/* ~/tmp_global
 mv ~/tmp_global mkdir ~/.dotfiles/global
 ```
 
+## FAQ
+
+### Stowing zsh would cause conflicts
+
+If you get an error similar to the one below, simply force stowing by passing
+the `-f` or `--force` flag.
+
+```
+✖ WARNING! stowing zsh would cause conflicts:
+  * existing target is not owned by stow: .zsh_aliases
+  * existing target is not owned by stow: .zsh_envs
+  * existing target is not owned by stow: .zsh_sources
+  * existing target is not owned by stow: .zshrc
+All operations aborted.
+```
+
+For example . . .
+
+```sh
+dotstow stow -f zsh
+```
+
+**Please understand this will overrite any existing file.**
+
 ## Support
 
 Submit an [issue](https://github.com/codejamninja/dotstow/issues/new)
