@@ -8,7 +8,6 @@ import { Options } from '../types';
 export default async function sync(options: Options = {}): Promise<any> {
   const dotfilesPath = path.resolve(homedir(), options.dotfiles || '.dotfiles');
   options.dotfiles = dotfilesPath;
-  const message = '';
   const spinner = ora();
   const git = new Git(options);
   if (await fs.pathExists(dotfilesPath)) {
@@ -21,9 +20,9 @@ export default async function sync(options: Options = {}): Promise<any> {
     await git.clone(remote);
     spinner.succeed('cloned dotfiles');
   }
-  spinner.start(`committing dotfiles with message "${message}"`);
-  const committed = await git.commit();
-  if (committed) {
+  spinner.start('committing dotfiles');
+  const message = await git.commit();
+  if (message) {
     spinner.succeed(`committed dotfiles with message "${message}"`);
     spinner.start('pushing dotfiles');
     await git.push();

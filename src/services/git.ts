@@ -1,5 +1,5 @@
 import path from 'path';
-import { Clone, Cred, Repository, Signature } from 'nodegit';
+import { Clone, Cred, Diff, Repository, Signature } from 'nodegit';
 import { createInterface as createReadlineInterface } from 'readline';
 import { homedir, userInfo } from 'os';
 import { Options } from '../types';
@@ -40,18 +40,23 @@ export default class Git {
     });
   }
 
-  async commit(message?: string): Promise<number> {
+  async commit(message?: string): Promise<string | null> {
     const repo = await Repository.open(this.dotfilesPath);
     const signature = await ((Signature.default(repo) as unknown) as Promise<
       Signature
     >);
     const index = await repo.refreshIndex();
     const head = await repo.getHeadCommit();
-    const changeCount = (await repo.getStatus()).length;
-    if (!changeCount) return changeCount;
+    if (!(await repo.getStatus()).length) return null;
     await index.addAll();
     index.write();
     const oid = await index.writeTree();
+    if (!message) {
+      const diff = await Diff.treeToIndex(repo, await head.getTree());
+      message = `Updated ${
+        (await diff.patches()).map(patch => patch.newFile().path())?.[0]
+      }`;
+    }
     await repo.createCommit(
       'HEAD',
       signature,
@@ -60,7 +65,7 @@ export default class Git {
       oid,
       [await repo.getCommit(head)]
     );
-    return changeCount;
+    return message;
   }
 
   async pull(branch = this.branch) {
