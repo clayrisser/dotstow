@@ -1,4 +1,4 @@
-# dotstow
+# dotstow (DEPRICATED)
 
 [![GitHub stars](https://img.shields.io/github/stars/codejamninja/dotstow.svg?style=social&label=Stars)](https://github.com/codejamninja/dotstow)
 
@@ -6,6 +6,40 @@
 
 Please ★ this repo if you found it useful ★ ★ ★
 
+# DEPRICATED
+
+The pypi dotstow module is deprecated.
+
+Please use the one found on npm.
+https://npmjs.org/package/dotstow
+
+You can install it by running the following command.
+
+```
+npm install -g dotstow
+```
+
+The new and improved dotstow module on npm
+supports  the following features.
+
+* Group dotfiles into units (stow packages)
+* Automatically symlink (stow) files
+* Backup dotfiles with git
+* Keep track of simultaneous dotfile configurations for multiple environments
+* Supports shell autocompletion
+
+
+If you were using the python version of dotstow, you should upgrade to this
+version to get the benefits of multiple environments. If you switch you will
+have to move your stash plugins into an environment folder (global is recommended).
+
+You can do that by running the following commands.
+
+```
+mkdir ~/tmp_global
+mv ~/.dotfiles/* ~/tmp_global
+mv ~/tmp_global mkdir ~/.dotfiles/global
+```
 
 ## Features
 
