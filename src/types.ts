@@ -1,1 +1,5 @@
-export interface Options {}
+export interface Options {
+  branch?: string;
+  debug?: boolean;
+  dotfiles?: string;
+}

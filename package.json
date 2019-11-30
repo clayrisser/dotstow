@@ -37,7 +37,7 @@
     "lint": "npm run format && tsc --noEmit && eslint --ext .ts,.tsx ./",
     "lint:fix": "npm run format && tsc --noEmit && eslint --ext .ts,.tsx --fix ./",
     "prepublish": "npm run build",
-    "start": "babel-node --extensions \".ts,.tsx\" src/bin",
+    "start": "npm run build && babel-node --extensions \".ts,.tsx\" src/bin",
     "test": "npm run lint:fix && jest --coverage",
     "test:watch": "npm run lint && jest --watch"
   },
@@ -47,24 +47,31 @@
     "@oclif/config": "^1.13.3",
     "@oclif/errors": "^1.2.2",
     "@oclif/parser": "^3.8.4",
-    "core-js": "^3.3.6"
+    "core-js": "^3.3.6",
+    "err": "^2.1.11",
+    "execa": "^3.4.0",
+    "fs-extra": "^8.1.0",
+    "nodegit": "^0.26.2",
+    "ora": "^4.0.3",
+    "typescript": "^3.7.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
     "@babel/node": "^7.6.3",
+    "@babel/plugin-proposal-optional-chaining": "^7.7.4",
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-typescript": "^7.6.0",
     "@oclif/dev-cli": "^1.22.2",
     "@types/core-js": "^2.5.2",
     "@types/jest": "^24.0.21",
+    "@types/nodegit": "^0.24.13",
     "@typescript-eslint/eslint-plugin": "^2.9.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb-typescript": "^6.3.1",
     "eslint-config-jam": "^0.2.20",
     "jest": "^24.9.0",
-    "prettier": "git+https://github.com/fisker/prettier.git#typescript-37-attempt-2",
-    "typescript": "3.7.1-rc"
+    "prettier": "git+https://github.com/fisker/prettier.git#typescript-37-attempt-2"
   },
   "engines": {
     "node": ">=6.0.0"

@@ -8,15 +8,15 @@ export default class Stow extends Command {
   static examples = ['$ dotstow stow'];
 
   static flags = {
-    config: flags.string({ char: 'c', required: false }),
-    debug: flags.boolean({ char: 'd', required: false })
+    debug: flags.boolean({ required: false }),
+    dotfiles: flags.string({ char: 'd', required: false })
   };
 
   async run() {
     const { flags } = this.parse(Stow);
     const options: Options = {
-      config: JSON.parse(flags.config || '{}'),
-      debug: !!flags.debug
+      debug: !!flags.debug,
+      dotfiles: flags.dotfiles
     };
     return stow(options);
   }

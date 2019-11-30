@@ -1,6 +1,8 @@
 import { Options } from '../types';
+import { Stow } from '../services';
 
 export default async function stow(options: Options = {}): Promise<any> {
-  console.log('stowing');
+  const stow = new Stow(options);
+  await stow.stow([]);
   return options;
 }
