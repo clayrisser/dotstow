@@ -40,7 +40,7 @@ npm install -g dotstow
 
 ## Dependencies
 
-- [NodeJS](https://nodejs.org)
+- [NodeJS](https://nodejs.org) ( > nodejs 12)
 - [GNU Stow](https://www.gnu.org/software/stow)
 
 ## Usage
