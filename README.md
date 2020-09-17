@@ -199,6 +199,17 @@ mv ~/.dotfiles/* ~/tmp_global
 mv ~/tmp_global mkdir ~/.dotfiles/global
 ```
 
+## Setting up dev instance
+
+```sh
+
+git clone https://github.com/codejamninja/dotstow.git
+cd dotstow
+npm install --also=dev
+
+# To start testing
+npm run-script start
+```
 ## FAQ
 
 ### Stowing zsh would cause conflicts

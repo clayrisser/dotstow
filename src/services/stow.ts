@@ -134,7 +134,7 @@ export default class Stow {
           files.push(matches[1]);
           regex.lastIndex++;
         }
-        await mapSeries(files, async file => {
+        await mapSeries(files, async (file) => {
           const filePath = path.resolve(homedir(), file);
           await fs.unlink(filePath);
         });
