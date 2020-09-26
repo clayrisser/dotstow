@@ -207,9 +207,15 @@ git clone https://github.com/codejamninja/dotstow.git
 cd dotstow
 npm install --also=dev
 
-# To start testing
-npm run-script start
+# To start the compiled dotstow code:
+# Note: Ensure that you have yarn installed. (else install it using `npm install -g yarn`)
+yarn
+yarn start
+
+# If you want test a command.
+yarn start <command>
 ```
+
 ## FAQ
 
 ### Stowing zsh would cause conflicts
