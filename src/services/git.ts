@@ -54,7 +54,7 @@ export default class Git {
     if (!message) {
       const diff = await Diff.treeToIndex(repo, await head.getTree());
       message = `Updated ${
-        (await diff.patches()).map(patch => patch.newFile().path())?.[0]
+        (await diff.patches()).map((patch) => patch.newFile().path())?.[0]
       }`;
     }
     await repo.createCommit(
@@ -85,7 +85,7 @@ export default class Git {
   }
 
   async guessRemote(): Promise<string> {
-    const githubUsername = await new Promise<string>(resolve => {
+    const githubUsername = await new Promise<string>((resolve) => {
       const readline = createReadlineInterface({
         input: process.stdin,
         output: process.stdout
@@ -99,7 +99,7 @@ export default class Git {
         }
       );
     });
-    return new Promise<string>(resolve => {
+    return new Promise<string>((resolve) => {
       const readline = createReadlineInterface({
         input: process.stdin,
         output: process.stdout

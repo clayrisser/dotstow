@@ -190,10 +190,7 @@ export default class OS {
   get value(): string {
     let release = '';
     try {
-      release = fs
-        .readFileSync('/etc/os-release')
-        .toString()
-        .toLowerCase();
+      release = fs.readFileSync('/etc/os-release').toString().toLowerCase();
     } catch (err) {
       release = '';
     }

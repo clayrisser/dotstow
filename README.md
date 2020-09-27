@@ -199,6 +199,23 @@ mv ~/.dotfiles/* ~/tmp_global
 mv ~/tmp_global mkdir ~/.dotfiles/global
 ```
 
+## Setting up dev instance
+
+```sh
+
+git clone https://github.com/codejamninja/dotstow.git
+cd dotstow
+npm install --also=dev
+
+# To start the compiled dotstow code:
+# Note: Ensure that you have yarn installed. (else install it using `npm install -g yarn`)
+yarn
+yarn start
+
+# If you want test a command.
+yarn start <command>
+```
+
 ## FAQ
 
 ### Stowing zsh would cause conflicts
