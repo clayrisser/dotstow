@@ -38,6 +38,7 @@
     "lint:fix": "npm run format && tsc --noEmit && eslint --ext .ts,.tsx --fix ./",
     "prepublish": "npm run build",
     "start": "npm run build && babel-node --extensions \".ts,.tsx\" src/bin",
+    "re-run": "babel-node --extensions \".ts,.tsx\" src/bin",
     "test": "npm run lint:fix && jest --coverage",
     "test:watch": "npm run lint && jest --watch"
   },
@@ -55,7 +56,9 @@
     "fs-extra": "^8.1.0",
     "nodegit": "^0.26.2",
     "ora": "^4.0.3",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.2",
+    "yaml": "^1.10.0",
+    "yarn": "^1.22.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
