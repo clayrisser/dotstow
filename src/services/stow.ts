@@ -7,6 +7,10 @@ import { mapSeries } from 'bluebird';
 import { Options } from '../types';
 import { OS } from '.';
 
+const bootstrapConfigName = 'bootstrap.yml';
+
+export { bootstrapConfigName };
+
 export default class Stow {
   dotfilesPath: string;
 
@@ -56,6 +60,12 @@ export default class Stow {
     );
   }
 
+  containsConfig(environment: string, configName: string): boolean {
+    return fs.pathExistsSync(
+      path.resolve(this.dotfilesPath, environment, configName)
+    );
+  }
+
   getEnvironment(packageName?: string): string {
     const environments = fs
       .readdirSync(this.dotfilesPath)
@@ -97,6 +107,49 @@ export default class Stow {
       throw new Err(`package '${packageName}' not found`, 404);
     }
     return environments[0];
+  }
+
+  getBootstrapEnvironment(): string {
+    const environments = fs
+      .readdirSync(this.dotfilesPath)
+      .filter((name: string) => {
+        if (!name.length || name[0] === '.' || name[0] === '_') {
+          return false;
+        }
+        return fs.statSync(path.resolve(this.dotfilesPath, name)).isDirectory();
+      });
+    if (!environments.length) throw new Err('please create an environment');
+    if (
+      this.options.environment &&
+      environments.includes(this.options.environment) &&
+      this.containsConfig(this.options.environment, bootstrapConfigName)
+    ) {
+      return this.options.environment;
+    }
+    if (
+      environments.includes(hostname()) &&
+      this.containsConfig(hostname(), bootstrapConfigName)
+    ) {
+      return hostname();
+    }
+    for (let i = 0; i < this.platforms.length; i++) {
+      if (
+        environments.includes(this.platforms?.[i]) &&
+        this.containsConfig(this.platforms?.[i], bootstrapConfigName)
+      ) {
+        return this.platforms[i];
+      }
+    }
+    if (
+      environments.includes('global') &&
+      this.containsConfig('global', bootstrapConfigName)
+    ) {
+      return 'global';
+    }
+    if (!this.containsConfig('global', bootstrapConfigName)) {
+      throw new Err(`${bootstrapConfigName} not found`, 404);
+    }
+    return '';
   }
 
   async stow(packages: string[]) {

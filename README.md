@@ -16,9 +16,10 @@ Silicon Hills offers premium Node and React develpoment and support services. Ge
 
 ## Related Projects
 
-You can see my dotfiles (which are using dotstow) at the link below.
+You can see some dotfiles repos (which are using dotstow) at the link below.
 
-[github.com/codejamninja/dotfiles](https://github.com/codejamninja/dotfiles)
+ - [codejamninja/dotfiles](https://github.com/codejamninja/dotfiles)
+ - [sreerajkksd/dotfiles](https://github.com/sreerajkksd/dotfiles)
 
 You can read more about dotstow at the blog post below.
 
@@ -31,6 +32,7 @@ https://dev.to/codejamninja/dotstow-the-smart-way-to-manage-your-dotfiles-25ik
 - Backup dotfiles with git
 - Keep track of simultaneous dotfile configurations for multiple environments
 - Supports shell autocompletion
+- Supports bootstraping using a config
 
 ## Installation
 
@@ -55,19 +57,24 @@ The idea behind dotstow is twofold:
 
 1. You don't need to maintain a shell script that symlinks all of your dotfiles to the correct
    places in your \$HOME directory upon a new dotfile install
-2. Individual directories in you .dotfiles become packages that can be installed independently
+2. Individual directories in your .dotfiles become packages that can be installed independently
    using `dotstow stow [package]`
 
 For example:
 
 When setting up your dotfiles on a new computer
 
-1. Run `dotstow sync`, give it your dotfiles github repo link, and watch as it's cloned into `~/.dotfiles`.
+1. Run `dotstow bootstrap --remote <GITHUB_REPO_LINK>`, and watch as it's cloned into `~/.dotfiles` and would run the scripts configured in bootstrap.yml.
 2. Run`dotstow stow zsh emacs vim ...` etc for each of the stow packages you'd like to install (aka symlink to \$HOME).
-3. When you **update a file** in a package, you only need to `dotstow sync` to update your linked github repo
-   with the changes. If you **add new files** to your stow package you will need to restow the package.
+3. To pull **the latest changes** from the remote repository, run `dotstow pull`.
+4. When you **update a file** in a package, you only need to `dotstow sync` to update your linked github repo
+   with the changes. This takes care of committing/pushing the changes to the repository.
+
+   Note: If you **add new files** to your stow package, you will need to restow the package.
    For example, when adding `.zshrc` to `.dotfiles/globals/zsh/`, you will need to `dotstow stow zsh` to restow the package
    and then `dotstow sync` to update your linked github repo with the changes.
+
+5. bootstrap.yml config can be placed on any environment directory (including global) and should contain the message and cmd keys for any item. See [sample config here](#Sample-bootstrap.yml-config)
 
 ```
 USAGE
@@ -75,7 +82,9 @@ USAGE
 
 COMMANDS
   autocomplete  display autocomplete installation instructions
+  bootstrap     bootstrap dotfiles
   help          display help for dotstow
+  pull          pull dotfiles
   stow          stow dotfiles
   sync          sync dotfiles
 ```
@@ -98,36 +107,71 @@ you are using. For example, if you were running `ubuntu`, dotstow would look in 
 `~/.dotfiles/linux` and `~/.dotfiles/unix` for the package.
 
 Dotstow can guess multiple operating systems.
+```
+    aix
+    amigaos
+    android
+    beos
+    bsd
+    centos
+    darwin
+    debian
+    fedora
+    freebsd
+    ios
+    linux
+    mac
+    nintendo
+    openbsd
+    osx
+    redhat
+    rhel
+    slackware
+    starBlade
+    sunos
+    ubuntu
+    unix
+    value
+    win
+    win32
+    win64
+    windows
+```
+
+### Bootstrap
+
+bootstrap.yml is meant to configure things that should have done before actually stowing the packages. Cloning certain directories and keeping them at certain locations is an example of that sort. bootstrap also takes care of cloning the dotfiles directory and you can start stowing packages right after this.
 
 ```
-aix
-amigaos
-android
-beos
-bsd
-centos
-darwin
-debian
-fedora
-freebsd
-ios
-linux
-mac
-nintendo
-openbsd
-osx
-redhat
-rhel
-slackware
-starBlade
-sunos
-ubuntu
-unix
-value
-win
-win32
-win64
-windows
+bootstrap dotfiles
+
+USAGE
+  $ dotstow bootstrap
+
+OPTIONS
+  -d, --dotfiles=dotfiles
+  -e, --environment=environment
+  -r, --remote=remote
+  --debug
+
+EXAMPLE
+  $ dotstow bootstrap --remote https://github.com/sreerajkksd/dotfiles.git
+```
+
+## Sample bootstrap.yml config
+
+```yaml
+- message: Setting up Vim Plug
+  cmd: curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+- message: Setting up Tmux TPM
+  cmd: git clone -q --depth 1 https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+- message: Setting up ohm-my-zsh
+  cmd: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+- message: Installing VIM Plug
+  cmd: vim +'PlugInstall --sync' +qa
 ```
 
 ### Stow
