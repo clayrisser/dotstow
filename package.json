@@ -1,6 +1,6 @@
 {
   "name": "dotstow",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "manage dotfiles with stow",
   "keywords": [
     "dotstow",
