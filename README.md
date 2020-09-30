@@ -18,8 +18,8 @@ Silicon Hills offers premium Node and React develpoment and support services. Ge
 
 You can see some dotfiles repos (which are using dotstow) at the link below.
 
- - [codejamninja/dotfiles](https://github.com/codejamninja/dotfiles)
- - [sreerajkksd/dotfiles](https://github.com/sreerajkksd/dotfiles)
+- [codejamninja/dotfiles](https://github.com/codejamninja/dotfiles)
+- [sreerajkksd/dotfiles](https://github.com/sreerajkksd/dotfiles)
 
 You can read more about dotstow at the blog post below.
 
@@ -107,6 +107,7 @@ you are using. For example, if you were running `ubuntu`, dotstow would look in 
 `~/.dotfiles/linux` and `~/.dotfiles/unix` for the package.
 
 Dotstow can guess multiple operating systems.
+
 ```
     aix
     amigaos
