@@ -8,14 +8,18 @@ export default class Pull extends Command {
   static examples = ['$ dotstow pull'];
 
   static flags = {
+    branch: flags.string({ char: 'b', required: false }),
     debug: flags.boolean({ char: 'd', required: false })
   };
 
   async run() {
     const { flags } = this.parse(Pull);
+
     const options: Options = {
-      debug: !!flags.debug
+      debug: !!flags.debug,
+      branch: flags.branch
     };
+
     return pull(options);
   }
 }
