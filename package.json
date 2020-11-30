@@ -87,6 +87,7 @@
     "lib"
   ],
   "jest": {
+    "testEnvironment": "node",
     "testRegex": "tests(/|/.*/)[^_/]*[jt]sx?$",
     "verbose": true
   },
