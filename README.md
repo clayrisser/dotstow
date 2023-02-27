@@ -46,6 +46,8 @@ commands:
     a, available           available packages
     stowed                 stowed packages
     sync                   sync dotfiles
+    status                 dotfiles git status
+    reset                  reset dotfiles
     path                   get dotfiles path
 ```
 

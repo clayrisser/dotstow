@@ -119,6 +119,10 @@ main() {
         _wizard $@
     elif [ "$_COMMAND" = "path" ]; then
         _path $@
+    elif [ "$_COMMAND" = "reset" ]; then
+        _reset $@
+    elif [ "$_COMMAND" = "status" ]; then
+        _status $@
     fi
 }
 
@@ -254,6 +258,17 @@ _path() {
     echo "$DOTFILES_PATH"
 }
 
+_reset() {
+    cd "$DOTFILES_PATH"
+    git add -A
+    git reset --hard
+}
+
+_status() {
+    cd "$DOTFILES_PATH"
+    git status
+}
+
 if ! test $# -gt 0; then
     set -- "-h"
 fi
@@ -276,6 +291,8 @@ while test $# -gt 0; do
             echo "    a, available           available packages"
             echo "    stowed                 stowed packages"
             echo "    sync                   sync dotfiles"
+            echo "    status                 dotfiles git status"
+            echo "    reset                  reset dotfiles"
             echo "    path                   get dotfiles path"
             exit 0
         ;;
@@ -336,6 +353,14 @@ case "$1" in
     path)
         shift
         export _COMMAND=path
+    ;;
+    reset)
+        shift
+        export _COMMAND=reset
+    ;;
+    status)
+        shift
+        export _COMMAND=status
     ;;
     *)
         echo "invalid command $1" 1>&2
