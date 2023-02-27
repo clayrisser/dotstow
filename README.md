@@ -7,12 +7,22 @@ It allows you to keep your dotfiles in a version control system
 and easily sync them across multiple computers, even computers with
 completely different operating systems.
 
+![](assets/wizard.jpeg)
+
 ## Install
 
 To install dotstow, run the following command:
 
 ```sh
 $(curl --version >/dev/null 2>/dev/null && echo curl -L || echo wget -O-) https://gitlab.com/risserlabs/community/dotstow/-/raw/main/install.sh 2>/dev/null | sh
+```
+
+or
+
+```sh
+git clone https://github.com/clayrisser/dotstow
+cd dotstow
+make install
 ```
 
 ## Usage
