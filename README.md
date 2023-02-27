@@ -29,7 +29,7 @@ Replace <REPO> with the your git repository. This will create a dotfiles folder 
 directory at `~/.local/state/dotstow/dotfiles` and clone your git repository into it.
 This location was chosen to comply with the
 [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
-For convenience, the `~/.local/state/dotstow/dotfiles` location is symlinked to `~/.dotfiles`.
+For convenience, the `~/.local/state/dotstow/dotfiles` location is also symlinked to `~/.dotfiles`.
 
 > You can always find the location of your dotfiles by running the command `dotstow path`.
 
