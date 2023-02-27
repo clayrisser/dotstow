@@ -3,7 +3,7 @@
 # File Created: 22-05-2022 06:43:47
 # Author: Clay Risser
 # -----
-# Last Modified: 27-02-2023 12:42:59
+# Last Modified: 27-02-2023 13:51:38
 # Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2022
@@ -168,6 +168,8 @@ install: /usr/local/bin/dotstow \
 /usr/bin/stow:
 ifeq ($(PKG_MANAGER),apt-get)
 	@sudo apt-get install -y stow
+ifeq ($(PKG_MANAGER),brew)
+	@brew install stow
 else
 	@echo "$(ORANGE)please install the stow command$(NOCOLOR)\n$(CYAN)https://www.gnu.org/software/stow$(NOCOLOR)" >&2
 endif

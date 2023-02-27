@@ -130,6 +130,8 @@ _prepare() {
     if ! which stow 2>&1 >/dev/null; then
         if [ "$PKG_MANAGER" = "apt-get" ]; then
             sudo apt-get install -y stow
+        elif [ "$PKG_MANAGER" = "brew" ]; then
+            brew install stow
         else
             echo "please install the stow command
     https://www.gnu.org/software/stow" >&2
