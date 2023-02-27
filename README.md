@@ -60,7 +60,7 @@ to the git repository.
 ## Organization
 
 `dotstow` searches for packages in one of three folder: _global_, _\<PLATFORM>_, and _\<FLAVOR>_. These folders are
-determined based on the operating system and architecture of your computer.
+determined based on the operating system of your computer.
 
 On Linux, the _\<PLATFORM>_ folder is called `linux` and the _\<FLAVOR>_ folder is the Linux distribution name,
 for example `debian`, `suse`, `alpine` or `rhel`.
