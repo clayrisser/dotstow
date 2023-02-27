@@ -1,14 +1,15 @@
 #!/bin/sh
 
+export _STATE_PATH="${XDG_STATE_HOME:-$HOME/.local/state}/dotstow"
+export _STOWED_PATH="$_STATE_PATH/stowed"
+if [ "$DOTFILES_PATH" = "" ]; then
+    export DOTFILES_PATH="$_STATE_PATH/dotfiles"
+fi
+
 export ARCH=unknown
 export FLAVOR=unknown
 export PKG_MANAGER=unknown
 export PLATFORM=unknown
-
-if [ "$DOTFILES_PATH" = "" ]; then
-    export DOTFILES_PATH="$HOME/.dotfiles"
-fi
-
 if [ "$OS" = "Windows_NT" ]; then
 	export HOME="${HOMEDRIVE}${HOMEPATH}"
 	PLATFORM=win32
@@ -99,14 +100,34 @@ get_package_dir() {
 }
 
 main() {
+    _prepare
     if [ "$_COMMAND" = "init" ]; then
         _init $@
     elif [ "$_COMMAND" = "stow" ]; then
         _stow $@
     elif [ "$_COMMAND" = "unstow" ]; then
         _unstow $@
+    elif [ "$_COMMAND" = "available" ]; then
+        _available $@
     elif [ "$_COMMAND" = "sync" ]; then
         _sync $@
+    elif [ "$_COMMAND" = "stowed" ]; then
+        _stowed $@
+    fi
+}
+
+_prepare() {
+    if ! which stow 2>&1 >/dev/null; then
+        if [ "$PKG_MANAGER" = "apt-get" ]; then
+            sudo apt-get install -y stow
+        else
+            echo "please install the stow command
+    https://www.gnu.org/software/stow" >&2
+        exit 1
+        fi
+    fi
+    if [ ! -d "$_STATE_PATH" ]; then
+        mkdir -p "$_STATE_PATH"
     fi
 }
 
@@ -117,7 +138,10 @@ _init() {
         exit 1
     fi
     echo '$ git clone '"$_REPO $DOTFILES_PATH"
-    git clone $_REPO $DOTFILES_PATH
+    git clone $_REPO "$DOTFILES_PATH"
+    if [ ! -L "$HOME/.dotfiles" ] && [ ! -d "$HOME/.dotfiles" ] && [ ! -f "$HOME/.dotfiles" ]; then
+        ln -s "$DOTFILES_PATH" "$HOME/.dotfiles"
+    fi
 }
 
 _stow() {
@@ -132,10 +156,13 @@ _stow() {
     _RM_FILES=$(echo $(for f in $(cd $_PACKAGE_DIR/$_PACKAGE && (find . -type f | sed "s|^./|$HOME/|g")); do \
         if [ -f $f ]; then echo $f; fi \
     done))
-    echo '$ rm -f '"$_RM_FILES"
-    rm -f $_RM_FILES
+    if [ "$_RM_FILES" != "" ]; then
+        echo '$ rm -f '"$_RM_FILES"
+        rm -f $_RM_FILES
+    fi
     echo '$ '"stow -t $HOME -d $_PACKAGE_DIR $@ $_PACKAGE" | sed 's| \+| |g'
-    stow -t $HOME -d $_PACKAGE_DIR $@ $_PACKAGE
+    stow --override '/.*/s' -t $HOME -d $_PACKAGE_DIR $@ $_PACKAGE
+    mkdir -p "$_STOWED_PATH/$_PACKAGE"
 }
 
 _unstow() {
@@ -149,6 +176,17 @@ _unstow() {
     fi
     echo '$ '"stow -t $HOME -d $_PACKAGE_DIR -D $@ $_PACKAGE" | sed 's| \+| |g'
     stow -t $HOME -d $_PACKAGE_DIR -D $@ $_PACKAGE
+    rm -rf "$_STOWED_PATH/$_PACKAGE"
+}
+
+_available() {
+    ((ls $DOTFILES_PATH/global 2>/dev/null || true) && \
+        (ls $DOTFILES_PATH/$FLAVOR 2>/dev/null || true) && \
+        (ls $DOTFILES_PATH/$PLATFORM 2>/dev/null || true)) | sort | uniq
+}
+
+_stowed() {
+    (ls $_STOWED_PATH 2>/dev/null || true) | sort | uniq
 }
 
 _sync() {
@@ -178,9 +216,11 @@ while test $# -gt 0; do
             echo "    -h, --help            show brief help"
             echo " "
             echo "commands:"
-            echo "    i, init <REPO>         initialize dotstow"
+            echo "    init <REPO>         initialize dotstow"
             echo "    s, stow <PACKAGE>      stow a package"
             echo "    u, unstow <PACKAGE>    unstow a package"
+            echo "    a, available           available packages"
+            echo "    stowed                 stowed packages"
             echo "    sync                   sync dotfiles"
             exit 0
         ;;
@@ -195,7 +235,7 @@ while test $# -gt 0; do
 done
 
 case "$1" in
-    i|init)
+    init)
         shift
         if test $# -gt 0; then
             export _COMMAND=init
@@ -221,6 +261,14 @@ case "$1" in
             echo "no package specified" 1>&2
             exit 1
         fi
+    ;;
+    a|available)
+        shift
+        export _COMMAND=available
+    ;;
+    stowed)
+        shift
+        export _COMMAND=stowed
     ;;
     sync)
         shift
