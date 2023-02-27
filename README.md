@@ -16,35 +16,45 @@ $(curl --version >/dev/null 2>/dev/null && echo curl -L || echo wget -O-) https:
 
 ## Usage
 
-1. Initialize dotstow
+### 1. Initialize dotstow
 
-   To start using dotstow, you need to initialize it with your Git repository. Run the following command:
+To start using dotstow, you need to initialize it with your Git repository. Run the following command:
 
-   ```sh
-   dotstow init <REPO>
-   ```
+```sh
+dotstow init <REPO>
+```
 
-   Replace <REPO> with the URL of your Git repository. This will create a .dotfiles folder in your home directory and clone your Git repository into it.
+Replace <REPO> with the your git repository. This will create a dotfiles folder in your home
+directory at `~/.local/state/dotstow/dotfiles` and clone your git repository into it.
+This location was chosen to comply with the
+[XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
+For convenience, the `~/.local/state/dotstow/dotfiles` location is symlinked to `~/.dotfiles`.
 
-2. Stow a package
+> You can always find the location of your dotfiles by running the command `dotstow path`.
 
-   Once you have initialized dotstow, you can stow a package using the following command:
+### 2. Stow a package
 
-   ```sh
-   dotstow stow <PACKAGE>
-   ```
+Once you have initialized dotstow, you can stow a package using the following command:
 
-   Replace <PACKAGE> with the name of the package you want to stow. This will create symbolic links in your home directory to the corresponding files in the package folder.
+```sh
+dotstow stow <PACKAGE>
+```
 
-3. Sync dotfiles
+Replace <PACKAGE> with the name of the package you want to stow. This will create symbolic links in
+your home directory to the corresponding files in the package folder.
 
-   To sync your dotfiles with the Git repository, use the following command:
+### 3. Sync dotfiles
 
-   ```sh
-   dotstow sync
-   ```
+To sync your dotfiles with the git repository, use the following command:
 
-   This will commit and push any changes in your dotfiles to the Git repository.
+```sh
+dotstow sync
+```
+
+This will pull any changes as well as commit and push any changes in your dotfiles
+to the git repository.
+
+> You can always check the git status of your dotfiles by running the command `dotstow status`.
 
 ## Organization
 
