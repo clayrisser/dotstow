@@ -117,6 +117,8 @@ main() {
         _stowed $@
     elif [ "$_COMMAND" = "wizard" ]; then
         _wizard $@
+    elif [ "$_COMMAND" = "path" ]; then
+        _path $@
     fi
 }
 
@@ -248,6 +250,10 @@ EOF
     rm -rf $_TMP_PATH 2>/dev/null || true
 }
 
+_path() {
+    echo "$DOTFILES_PATH"
+}
+
 if ! test $# -gt 0; then
     set -- "-h"
 fi
@@ -270,6 +276,7 @@ while test $# -gt 0; do
             echo "    a, available           available packages"
             echo "    stowed                 stowed packages"
             echo "    sync                   sync dotfiles"
+            echo "    path                   get dotfiles path"
             exit 0
         ;;
         -*)
@@ -325,6 +332,10 @@ case "$1" in
     sync)
         shift
         export _COMMAND=sync
+    ;;
+    path)
+        shift
+        export _COMMAND=path
     ;;
     *)
         echo "invalid command $1" 1>&2

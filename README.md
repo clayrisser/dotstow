@@ -46,6 +46,7 @@ commands:
     a, available           available packages
     stowed                 stowed packages
     sync                   sync dotfiles
+    path                   get dotfiles path
 ```
 
 ## Dependencies
