@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export DEBIAN_FRONTEND=${DEBIAN_FRONTEND:-gnome}
+export _TMP_PATH="${XDG_RUNTIME_DIR:-$([ -d "/run/user/$(id -u $USER)" ] && echo "/run/user/$(id -u $USER)" || echo ${TMP:-${TEMP:-/tmp}})}/cody/wizard/$$"
 export _STATE_PATH="${XDG_STATE_HOME:-$HOME/.local/state}/dotstow"
 export _STOWED_PATH="$_STATE_PATH/stowed"
 if [ "$DOTFILES_PATH" = "" ]; then
@@ -113,6 +115,8 @@ main() {
         _sync $@
     elif [ "$_COMMAND" = "stowed" ]; then
         _stowed $@
+    elif [ "$_COMMAND" = "wizard" ]; then
+        _wizard $@
     fi
 }
 
@@ -201,6 +205,49 @@ _sync() {
     git push
 }
 
+_wizard() {
+    if (! which prompt 2>&1 >/dev/null) || (! which response 2>&1 >/dev/null); then
+        echo "wizard requires prompt and response command" >&2
+        exit 1
+    fi
+    NOT_STOWED=$( (dotstow stowed && dotstow available) | sort | uniq -u)
+    mkdir -p $_TMP_PATH
+    true > $_TMP_PATH/cody.templates
+    if [ "$(dotstow stowed)" != "" ]; then
+        cat <<EOF >> $_TMP_PATH/cody.templates
+Template: dotstow/packages_unstow
+Type: multiselect
+Description: unstow packages
+ select the packages you wish to unstow
+Choices:$(echo $(dotstow stowed) | sed 's| \+|, |g')
+
+EOF
+    fi
+    if [ "$NOT_STOWED" != "" ]; then
+        cat <<EOF >> $_TMP_PATH/cody.templates
+Template: dotstow/packages_stow
+Type: multiselect
+Description: stow packages
+ select the packages you wish to stow
+Choices:$(echo $(echo "$NOT_STOWED") | sed 's| \+|, |g')
+
+EOF
+    fi
+    prompt "$_TMP_PATH/cody.templates"
+    RESPONSE=$(response $_TMP_PATH/cody.templates)
+    PACKAGES_STOW=$(echo "$RESPONSE" | grep '^dotstow/packages_stow:' | sed 's|^dotstow/packages_stow:||g' | sed 's|,| |g')
+    PACKAGES_UNSTOW=$(echo "$RESPONSE" | grep '^dotstow/packages_unstow:' | sed 's|^dotstow/packages_unstow:||g' | sed 's|,| |g')
+    for l in $PACKAGES_STOW; do
+        echo '$' dotstow stow $l
+        dotstow stow $l
+    done
+    for t in $PACKAGES_UNSTOW; do
+        echo '$' dotstow unstow $t
+        dotstow unstow $t
+    done
+    rm -rf $_TMP_PATH 2>/dev/null || true
+}
+
 if ! test $# -gt 0; then
     set -- "-h"
 fi
@@ -219,6 +266,7 @@ while test $# -gt 0; do
             echo "    init <REPO>            initialize dotstow"
             echo "    s, stow <PACKAGE>      stow a package"
             echo "    u, unstow <PACKAGE>    unstow a package"
+            echo "    w, wizard              dotfiles wizard"
             echo "    a, available           available packages"
             echo "    stowed                 stowed packages"
             echo "    sync                   sync dotfiles"
@@ -261,6 +309,10 @@ case "$1" in
             echo "no package specified" 1>&2
             exit 1
         fi
+    ;;
+    w|wizard)
+        shift
+        export _COMMAND=wizard
     ;;
     a|available)
         shift

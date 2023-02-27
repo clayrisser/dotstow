@@ -42,6 +42,7 @@ commands:
     init <REPO>            initialize dotstow
     s, stow <PACKAGE>      stow a package
     u, unstow <PACKAGE>    unstow a package
+    w, wizard              dotfiles wizard
     a, available           available packages
     stowed                 stowed packages
     sync                   sync dotfiles
