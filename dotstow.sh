@@ -99,11 +99,25 @@ get_package_dir() {
 }
 
 main() {
-    if [ "$_COMMAND" = "stow" ]; then
-        _stow $_PACKAGE
+    if [ "$_COMMAND" = "init" ]; then
+        _init $@
+    elif [ "$_COMMAND" = "stow" ]; then
+        _stow $@
     elif [ "$_COMMAND" = "unstow" ]; then
-        _unstow $_PACKAGE
+        _unstow $@
+    elif [ "$_COMMAND" = "sync" ]; then
+        _sync $@
     fi
+}
+
+_init() {
+    _REPO=$1
+    if [ -d "$DOTFILES_PATH" ]; then
+        echo "dotfiles already initialized" >&2
+        exit 1
+    fi
+    echo '$ git clone '"$_REPO $DOTFILES_PATH"
+    git clone $_REPO $DOTFILES_PATH
 }
 
 _stow() {
@@ -115,7 +129,12 @@ _stow() {
         echo "package $_PACKAGE not found" >&2
         exit 1
     fi
-    echo "stow -t $HOME -d $_PACKAGE_DIR $@ $_PACKAGE" | sed 's| \+| |g'
+    _RM_FILES=$(echo $(for f in $(cd $_PACKAGE_DIR/$_PACKAGE && (find . -type f | sed "s|^./|$HOME/|g")); do \
+        if [ -f $f ]; then echo $f; fi \
+    done))
+    echo '$ rm -f '"$_RM_FILES"
+    rm -f $_RM_FILES
+    echo '$ '"stow -t $HOME -d $_PACKAGE_DIR $@ $_PACKAGE" | sed 's| \+| |g'
     stow -t $HOME -d $_PACKAGE_DIR $@ $_PACKAGE
 }
 
@@ -128,8 +147,19 @@ _unstow() {
         echo "package $_PACKAGE not found" >&2
         exit 1
     fi
-    echo "stow -t $HOME -d $_PACKAGE_DIR -D $@ $_PACKAGE" | sed 's| \+| |g'
+    echo '$ '"stow -t $HOME -d $_PACKAGE_DIR -D $@ $_PACKAGE" | sed 's| \+| |g'
     stow -t $HOME -d $_PACKAGE_DIR -D $@ $_PACKAGE
+}
+
+_sync() {
+    echo '$ git add -A'
+    git add -A
+    echo '$ git commit -m "Updated '"$(git status | grep 'modified: ' | sed 's|^.*modified:\s*||g' | head -n1)"'"'
+    git commit -m "Updated $(git status | grep 'modified: ' | sed 's|^.*modified:\s*||g' | head -n1)"
+    echo '$ git pull'
+    git pull
+    echo '$ git push'
+    git push
 }
 
 if ! test $# -gt 0; then
@@ -147,8 +177,10 @@ while test $# -gt 0; do
             echo "    -h, --help            show brief help"
             echo " "
             echo "commands:"
-            echo "    stow <PACKAGE>      stow a package"
-            echo "    unstow <PACKAGE>    unstow a package"
+            echo "    i, init <REPO>         initialize dotstow"
+            echo "    s, stow <PACKAGE>      stow a package"
+            echo "    u, unstow <PACKAGE>    unstow a package"
+            echo "    sync                   sync dotfiles"
             exit 0
         ;;
         -*)
@@ -162,27 +194,36 @@ while test $# -gt 0; do
 done
 
 case "$1" in
+    i|init)
+        shift
+        if test $# -gt 0; then
+            export _COMMAND=init
+        else
+            echo "no repo specified" 1>&2
+            exit 1
+        fi
+    ;;
     s|stow)
         shift
         if test $# -gt 0; then
             export _COMMAND=stow
-            export _PACKAGE=$1
         else
             echo "no package specified" 1>&2
             exit 1
         fi
-        shift
     ;;
     u|unstow)
         shift
         if test $# -gt 0; then
             export _COMMAND=unstow
-            export _PACKAGE=$1
         else
             echo "no package specified" 1>&2
             exit 1
         fi
+    ;;
+    sync)
         shift
+        export _COMMAND=sync
     ;;
     *)
         echo "invalid command $1" 1>&2
@@ -190,4 +231,4 @@ case "$1" in
     ;;
 esac
 
-main
+main $@
