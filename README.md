@@ -4,7 +4,8 @@
 
 `dotstow` is a tool to manage your dotfiles using Git and Stow.
 It allows you to keep your dotfiles in a version control system
-and easily sync them across multiple computers.
+and easily sync them across multiple computers, even computers with
+completely different operating systems.
 
 ## Install
 
