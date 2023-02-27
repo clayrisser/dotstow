@@ -216,7 +216,7 @@ while test $# -gt 0; do
             echo "    -h, --help            show brief help"
             echo " "
             echo "commands:"
-            echo "    init <REPO>         initialize dotstow"
+            echo "    init <REPO>            initialize dotstow"
             echo "    s, stow <PACKAGE>      stow a package"
             echo "    u, unstow <PACKAGE>    unstow a package"
             echo "    a, available           available packages"
