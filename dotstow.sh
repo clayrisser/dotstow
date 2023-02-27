@@ -152,6 +152,7 @@ _unstow() {
 }
 
 _sync() {
+    cd $DOTFILES_PATH
     echo '$ git add -A'
     git add -A
     echo '$ git commit -m "Updated '"$(git status | grep 'modified: ' | sed 's|^.*modified:\s*||g' | head -n1)"'"'
