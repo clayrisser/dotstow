@@ -58,23 +58,24 @@ to the git repository.
 
 ## Organization
 
-dotstow searches for packages in one of three folder: global, <PLATFORM>, and <FLAVOR>. These folders are
+dotstow searches for packages in one of three folder: global, \<PLATFORM>, and \<FLAVOR>. These folders are
 determined based on the operating system and architecture of your computer.
 
-Here are some examples of how dotstow determines the <PLATFORM> and <FLAVOR> folders
+Here are some examples of how dotstow determines the \<PLATFORM> and \<FLAVOR> folders
 based on the current operating system:
 
-On Linux, the <PLATFORM> folder is called `linux` and the <FLAVOR> folder is the Linux distribution name,
+On Linux, the \<PLATFORM> folder is called `linux` and the \<FLAVOR> folder is the Linux distribution name,
 for example `debian`, `suse`, `alpine` or `rhel`.
-On macOS, dotstow sets <PLATFORM> to `darwin`. The <FLAVOR> folder is not supported on macOS.
+
+On macOS, dotstow sets \<PLATFORM> to `darwin`. The \<FLAVOR> folder is not supported on macOS.
 
 The folders are searched in the following order:
 
-- <FLAVOR>
-- <PLATFORM>
+- \<FLAVOR>
+- \<PLATFORM>
 - global
 
-For example, if you're on a Linux machine with the <FLAVOR> set to `debian`, and you run the command `dotstow stow zsh`,
+For example, if you're on a Linux machine with the \<FLAVOR> set to `debian`, and you run the command `dotstow stow zsh`,
 dotstow will look for the zsh package in the following folders, in order:
 
 - `debian/zsh`
@@ -101,6 +102,9 @@ You can use my dotfiles as an example, reference or even a starting point for yo
 - `dotstow status`: Show the Git status of your dotfiles.
 - `dotstow reset`: Reset your dotfiles to the last commit.
 - `dotstow path`: Print the path of your dotfiles folder.
+
+> Please note that `dotstow wizard` only works on debian based linux systems of its
+> dependency on [debconf](https://salsa.debian.org/pkg-debconf/debconf).
 
 ```
 dotstow - manage dotfiles with git and stow
