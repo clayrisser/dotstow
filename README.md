@@ -28,6 +28,8 @@ $(curl --version >/dev/null 2>/dev/null && echo curl -L || echo wget -O-) https:
    dotstow sync
    ```
 
+## Docs
+
 ```
 dotstow - manage dotfiles with git and stow
 
