@@ -141,10 +141,31 @@ _prepare() {
     if [ ! -d "$_STATE_PATH" ]; then
         mkdir -p "$_STATE_PATH"
     fi
+    if (which prompt 2>&1 >/dev/null) && (which response 2>&1 >/dev/null) && [ ! -d "$DOTFILES_PATH" ]; then
+        mkdir -p $_TMP_PATH
+        true > $_TMP_PATH/cody.templates
+        cat <<EOF > $_TMP_PATH/cody.templates
+Template: dotstow/git_repo
+Type: string
+Description: git repo
+ select the git repository that contains your dotfiles
+Default: git@gitlab.com:$USER/dotfiles
+
+EOF
+        prompt "$_TMP_PATH/cody.templates"
+        RESPONSE=$(response $_TMP_PATH/cody.templates)
+        GIT_REPO=$(echo "$RESPONSE" | grep '^dotstow/git_repo:' | sed 's|^dotstow/git_repo:||g' | sed 's|,| |g')
+        rm -rf $_TMP_PATH
+        _init "$GIT_REPO"
+    fi
 }
 
 _init() {
     _REPO=$1
+    if [ "$_REPO" = "" ]; then
+        echo "no repo specified" >&2
+        exit 1
+    fi
     if [ -d "$DOTFILES_PATH" ]; then
         echo "dotfiles already initialized" >&2
         exit 1
@@ -313,7 +334,7 @@ case "$1" in
         shift
         if test $# -gt 0; then
             export _COMMAND=init
-        else
+        elif (! which prompt 2>&1 >/dev/null) || (! which response 2>&1 >/dev/null) || [ -d "$DOTFILES_PATH" ]; then
             echo "no repo specified" 1>&2
             exit 1
         fi
