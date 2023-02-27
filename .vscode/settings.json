@@ -10,7 +10,8 @@
     "mkpm",
     "nixpkgs",
     "Risser",
-    "stdenv"
+    "stdenv",
+    "unstow"
   ],
   "psi-header.variables": [["projectCreationYear", "2022"]],
   "psi-header.config": {

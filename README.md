@@ -1,6 +1,6 @@
 # dotstow
 
-> manage dotfiles with stow
+> manage dotfiles with git and stow
 
 ## Install
 
@@ -12,24 +12,24 @@ $(curl --version >/dev/null 2>/dev/null && echo curl -L || echo wget -O-) https:
 
 1. Initialize dotstow
 
-    ```sh
-    dotstow init git@gitlab.com:clayrisser/dotfiles.git
-    ```
+   ```sh
+   dotstow init git@gitlab.com:clayrisser/dotfiles.git
+   ```
 
 2. Stow a package
 
-    ```sh
-    dotstow stow zsh # symlinks zsh package
-    ```
+   ```sh
+   dotstow stow zsh # symlinks zsh package
+   ```
 
 3. Sync dotfiles
 
-    ```sh
-    dotstow sync
-    ```
+   ```sh
+   dotstow sync
+   ```
 
 ```
-dotstow - manage dotfiles with stow and make
+dotstow - manage dotfiles with git and stow
 
 dotstow [options] command <PACKAGE>
 
@@ -44,3 +44,8 @@ commands:
     stowed                 stowed packages
     sync                   sync dotfiles
 ```
+
+## Dependencies
+
+- [Git](https://git-scm.com)
+- [GNU Stow](https://www.gnu.org/software/stow)

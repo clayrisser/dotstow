@@ -208,7 +208,7 @@ fi
 while test $# -gt 0; do
     case "$1" in
         -h|--help)
-            echo "dotstow - manage dotfiles with stow and make"
+            echo "dotstow - manage dotfiles with git and stow"
             echo " "
             echo "dotstow [options] command <PACKAGE>"
             echo " "
