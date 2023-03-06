@@ -231,7 +231,7 @@ _sync() {
     echo '$ git pull'
     git pull
     echo '$ git push'
-    git push
+    (echo y) | git push
 }
 
 _wizard() {
