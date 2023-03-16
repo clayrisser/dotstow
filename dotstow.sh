@@ -171,7 +171,7 @@ _init() {
         exit 1
     fi
     echo '$ git clone '"$_REPO $DOTFILES_PATH"
-    git clone $_REPO "$DOTFILES_PATH"
+    yes | git clone $_REPO "$DOTFILES_PATH"
     if [ ! -L "$HOME/.dotfiles" ] && [ ! -d "$HOME/.dotfiles" ] && [ ! -f "$HOME/.dotfiles" ]; then
         ln -s "$DOTFILES_PATH" "$HOME/.dotfiles"
     fi
