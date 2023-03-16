@@ -1,5 +1,6 @@
 #!/bin/sh
 
+export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 export DEBIAN_FRONTEND=${DEBIAN_FRONTEND:-gnome}
 export _TMP_PATH="${XDG_RUNTIME_DIR:-$([ -d "/run/user/$(id -u $USER)" ] && echo "/run/user/$(id -u $USER)" || echo ${TMP:-${TEMP:-/tmp}})}/cody/wizard/$$"
 export _STATE_PATH="${XDG_STATE_HOME:-$HOME/.local/state}/dotstow"
@@ -171,7 +172,7 @@ _init() {
         exit 1
     fi
     echo '$ git clone '"$_REPO $DOTFILES_PATH"
-    yes | git clone $_REPO "$DOTFILES_PATH"
+    git clone $_REPO "$DOTFILES_PATH"
     if [ ! -L "$HOME/.dotfiles" ] && [ ! -d "$HOME/.dotfiles" ] && [ ! -f "$HOME/.dotfiles" ]; then
         ln -s "$DOTFILES_PATH" "$HOME/.dotfiles"
     fi
