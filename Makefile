@@ -160,18 +160,26 @@ else
 endif
 
 .PHONY: install
+ifeq ($(PKG_MANAGER),brew)
+install: /usr/local/bin/dotstow \
+	/usr/local/bin/stow
+else
 install: /usr/local/bin/dotstow \
 	/usr/bin/stow
+endif
 /usr/local/bin/dotstow: dotstow.sh
 	@sudo cp $< $@
 	@sudo chmod +x $@
+/usr/local/bin/stow:
+ifeq ($(PKG_MANAGER),brew)
+	@brew install stow
+else
+	@echo "$(ORANGE)please install the stow command$(NOCOLOR)\n$(CYAN)https://www.gnu.org/software/stow$(NOCOLOR)" >&2
+endif
 /usr/bin/stow:
 ifeq ($(PKG_MANAGER),apt-get)
 	@sudo apt-get install -y stow
 else
-ifeq ($(PKG_MANAGER),brew)
-	@brew install stow
-endif
 	@echo "$(ORANGE)please install the stow command$(NOCOLOR)\n$(CYAN)https://www.gnu.org/software/stow$(NOCOLOR)" >&2
 endif
 
