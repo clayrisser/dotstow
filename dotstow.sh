@@ -14,33 +14,33 @@ export FLAVOR=unknown
 export PKG_MANAGER=unknown
 export PLATFORM=unknown
 if [ "$OS" = "Windows_NT" ]; then
-	export HOME="${HOMEDRIVE}${HOMEPATH}"
-	PLATFORM=win32
-	FLAVOR=win64
-	ARCH="$PROCESSOR_ARCHITECTURE"
-	PKG_MANAGER=choco
+    export HOME="${HOMEDRIVE}${HOMEPATH}"
+    PLATFORM=win32
+    FLAVOR=win64
+    ARCH="$PROCESSOR_ARCHITECTURE"
+    PKG_MANAGER=choco
     if [ "$ARCH" = "AMD64" ]; then
-		ARCH=amd64
+        ARCH=amd64
     elif [ "$ARCH" = "ARM64" ]; then
-		ARCH=arm64
+        ARCH=arm64
     fi
     if [ "$PROCESSOR_ARCHITECTURE" = "x86" ]; then
-		ARCH=amd64
+        ARCH=amd64
         if [ "$PROCESSOR_ARCHITEW6432" = "" ]; then
-			ARCH=x86
-			FLAVOR=win32
+            ARCH=x86
+            FLAVOR=win32
         fi
     fi
 else
-	PLATFORM=$(uname 2>/dev/null | tr '[:upper:]' '[:lower:]' 2>/dev/null)
-	ARCH=$( ( dpkg --print-architecture 2>/dev/null || uname -m 2>/dev/null || arch 2>/dev/null || echo unknown) | \
+    PLATFORM=$(uname 2>/dev/null | tr '[:upper:]' '[:lower:]' 2>/dev/null)
+    ARCH=$( (dpkg --print-architecture 2>/dev/null || uname -m 2>/dev/null || arch 2>/dev/null || echo unknown) |
         tr '[:upper:]' '[:lower:]' 2>/dev/null)
     if [ "$ARCH" = "i386" ] || [ "$ARCH" = "i686" ]; then
-		ARCH=386
+        ARCH=386
     elif [ "$ARCH" = "x86_64" ]; then
-		ARCH=amd64
+        ARCH=amd64
     fi
-	if [ "$PLATFORM" = "linux" ]; then
+    if [ "$PLATFORM" = "linux" ]; then
         if [ -f /system/bin/adb ]; then
             if [ "$(getprop --help >/dev/null 2>/dev/null && echo 1 || echo 0)" = "1" ]; then
                 PLATFORM=android
@@ -61,41 +61,45 @@ else
                 fi
             fi
             if [ "$FLAVOR" = "rhel" ]; then
-				PKG_MANAGER=yum
+                PKG_MANAGER=$(which microdnf >/dev/null 2>&1 && echo microdnf ||
+                    echo $(which dnf >/dev/null 2>&1 && echo dnf || echo yum))
             elif [ "$FLAVOR" = "suse" ]; then
-				PKG_MANAGER=zypper
+                PKG_MANAGER=zypper
             elif [ "$FLAVOR" = "debian" ]; then
-				PKG_MANAGER=apt-get
+                PKG_MANAGER=apt-get
             elif [ "$FLAVOR" = "ubuntu" ]; then
-				PKG_MANAGER=apt-get
+                PKG_MANAGER=apt-get
             elif [ "$FLAVOR" = "alpine" ]; then
-				PKG_MANAGER=apk
+                PKG_MANAGER=apk
             fi
         fi
-	elif [ "$PLATFORM" = "darwin" ]; then
-		PKG_MANAGER=brew
+    elif [ "$PLATFORM" = "darwin" ]; then
+        PKG_MANAGER=brew
     else
         if (echo "$PLATFORM" | grep -q 'MSYS'); then
-			PLATFORM=win32
-			FLAVOR=msys
-			PKG_MANAGER=pacman
+            PLATFORM=win32
+            FLAVOR=msys
+            PKG_MANAGER=pacman
         elif (echo "$PLATFORM" | grep -q 'MINGW'); then
-			PLATFORM=win32
-			FLAVOR=msys
-			PKG_MANAGER=mingw-get
+            PLATFORM=win32
+            FLAVOR=msys
+            PKG_MANAGER=mingw-get
         elif (echo "$PLATFORM" | grep -q 'CYGWIN'); then
-			PLATFORM=win32
-			FLAVOR=cygwin
+            PLATFORM=win32
+            FLAVOR=cygwin
         fi
     fi
+fi
+if [ "$FLAVOR" = "unknown" ]; then
+    FLAVOR="$PLATFORM"
 fi
 
 get_package_dir() {
     _PACKAGE=$1
     cd $DOTFILES_PATH
-    _PACKAGE_GROUP=$( ((ls $FLAVOR 2>/dev/null || true) | grep -qE "^${_PACKAGE}$") && echo $FLAVOR || \
-        (((ls $PLATFORM 2>/dev/null || true) | grep -qE "^${_PACKAGE}$") && echo $PLATFORM || \
-            (((ls global 2>/dev/null || true) | grep -qE "^${_PACKAGE}$") && echo global || true)) )
+    _PACKAGE_GROUP=$( ( (ls $FLAVOR 2>/dev/null || true) | grep -qE "^${_PACKAGE}$") && echo $FLAVOR ||
+        ( ( (ls $PLATFORM 2>/dev/null || true) | grep -qE "^${_PACKAGE}$") && echo $PLATFORM ||
+            ( ( (ls global 2>/dev/null || true) | grep -qE "^${_PACKAGE}$") && echo global || true)))
     if [ "$_PACKAGE_GROUP" != "" ] && [ -d "$_PACKAGE_GROUP" ]; then
         cd $_PACKAGE_GROUP
         pwd
@@ -136,7 +140,7 @@ _prepare() {
         else
             echo "please install the stow command
     https://www.gnu.org/software/stow" >&2
-        exit 1
+            exit 1
         fi
     fi
     if [ ! -d "$_STATE_PATH" ]; then
@@ -144,8 +148,8 @@ _prepare() {
     fi
     if (which prompt 2>&1 >/dev/null) && (which response 2>&1 >/dev/null) && [ ! -d "$DOTFILES_PATH" ]; then
         mkdir -p $_TMP_PATH
-        true > $_TMP_PATH/cody.templates
-        cat <<EOF > $_TMP_PATH/cody.templates
+        true >$_TMP_PATH/cody.templates
+        cat <<EOF >$_TMP_PATH/cody.templates
 Template: dotstow/git_repo
 Type: string
 Description: git repo
@@ -187,8 +191,8 @@ _stow() {
         echo "package $_PACKAGE not found" >&2
         exit 1
     fi
-    _RM_FILES=$(echo $(for f in $(cd $_PACKAGE_DIR/$_PACKAGE && (find . -type f | sed "s|^./|$HOME/|g")); do \
-        if [ -f $f ]; then echo $f; fi \
+    _RM_FILES=$(echo $(for f in $(cd $_PACKAGE_DIR/$_PACKAGE && (find . -type f | sed "s|^./|$HOME/|g")); do
+        if [ -f $f ]; then echo $f; fi
     done))
     if [ "$_RM_FILES" != "" ]; then
         echo '$ rm -f '"$_RM_FILES"
@@ -214,8 +218,8 @@ _unstow() {
 }
 
 _available() {
-    ((ls $DOTFILES_PATH/global 2>/dev/null || true) && \
-        (ls $DOTFILES_PATH/$FLAVOR 2>/dev/null || true) && \
+    ( (ls $DOTFILES_PATH/global 2>/dev/null || true) &&
+        (ls $DOTFILES_PATH/$FLAVOR 2>/dev/null || true) &&
         (ls $DOTFILES_PATH/$PLATFORM 2>/dev/null || true)) | sort | uniq
 }
 
@@ -242,9 +246,9 @@ _wizard() {
     fi
     NOT_STOWED=$( (dotstow stowed && dotstow available) | sort | uniq -u)
     mkdir -p $_TMP_PATH
-    true > $_TMP_PATH/cody.templates
+    true >$_TMP_PATH/cody.templates
     if [ "$(dotstow stowed)" != "" ]; then
-        cat <<EOF >> $_TMP_PATH/cody.templates
+        cat <<EOF >>$_TMP_PATH/cody.templates
 Template: dotstow/packages_unstow
 Type: multiselect
 Description: unstow packages
@@ -254,7 +258,7 @@ Choices:$(echo $(dotstow stowed) | sed 's| \+|, |g')
 EOF
     fi
     if [ "$NOT_STOWED" != "" ]; then
-        cat <<EOF >> $_TMP_PATH/cody.templates
+        cat <<EOF >>$_TMP_PATH/cody.templates
 Template: dotstow/packages_stow
 Type: multiselect
 Description: stow packages
@@ -299,96 +303,96 @@ fi
 
 while test $# -gt 0; do
     case "$1" in
-        -h|--help)
-            echo "dotstow - manage dotfiles with git and stow"
-            echo " "
-            echo "dotstow [options] command <PACKAGE>"
-            echo " "
-            echo "options:"
-            echo "    -h, --help            show brief help"
-            echo " "
-            echo "commands:"
-            echo "    init <REPO>            initialize dotstow"
-            echo "    s, stow <PACKAGE>      stow a package"
-            echo "    u, unstow <PACKAGE>    unstow a package"
-            echo "    w, wizard              dotfiles wizard"
-            echo "    a, available           available packages"
-            echo "    stowed                 stowed packages"
-            echo "    sync                   sync dotfiles"
-            echo "    status                 dotfiles git status"
-            echo "    reset                  reset dotfiles"
-            echo "    path                   get dotfiles path"
-            exit 0
+    -h | --help)
+        echo "dotstow - manage dotfiles with git and stow"
+        echo " "
+        echo "dotstow [options] command <PACKAGE>"
+        echo " "
+        echo "options:"
+        echo "    -h, --help            show brief help"
+        echo " "
+        echo "commands:"
+        echo "    init <REPO>            initialize dotstow"
+        echo "    s, stow <PACKAGE>      stow a package"
+        echo "    u, unstow <PACKAGE>    unstow a package"
+        echo "    w, wizard              dotfiles wizard"
+        echo "    a, available           available packages"
+        echo "    stowed                 stowed packages"
+        echo "    sync                   sync dotfiles"
+        echo "    status                 dotfiles git status"
+        echo "    reset                  reset dotfiles"
+        echo "    path                   get dotfiles path"
+        exit 0
         ;;
-        -*)
-            echo "invalid option $1" 1>&2
-            exit 1
+    -*)
+        echo "invalid option $1" 1>&2
+        exit 1
         ;;
-        *)
-            break
+    *)
+        break
         ;;
     esac
 done
 
 case "$1" in
-    init)
-        shift
-        if test $# -gt 0; then
-            export _COMMAND=init
-        elif (! which prompt 2>&1 >/dev/null) || (! which response 2>&1 >/dev/null) || [ -d "$DOTFILES_PATH" ]; then
-            echo "no repo specified" 1>&2
-            exit 1
-        fi
-    ;;
-    s|stow)
-        shift
-        if test $# -gt 0; then
-            export _COMMAND=stow
-        else
-            echo "no package specified" 1>&2
-            exit 1
-        fi
-    ;;
-    u|unstow)
-        shift
-        if test $# -gt 0; then
-            export _COMMAND=unstow
-        else
-            echo "no package specified" 1>&2
-            exit 1
-        fi
-    ;;
-    w|wizard)
-        shift
-        export _COMMAND=wizard
-    ;;
-    a|available)
-        shift
-        export _COMMAND=available
-    ;;
-    stowed)
-        shift
-        export _COMMAND=stowed
-    ;;
-    sync)
-        shift
-        export _COMMAND=sync
-    ;;
-    path)
-        shift
-        export _COMMAND=path
-    ;;
-    reset)
-        shift
-        export _COMMAND=reset
-    ;;
-    status)
-        shift
-        export _COMMAND=status
-    ;;
-    *)
-        echo "invalid command $1" 1>&2
+init)
+    shift
+    if test $# -gt 0; then
+        export _COMMAND=init
+    elif (! which prompt 2>&1 >/dev/null) || (! which response 2>&1 >/dev/null) || [ -d "$DOTFILES_PATH" ]; then
+        echo "no repo specified" 1>&2
         exit 1
+    fi
+    ;;
+s | stow)
+    shift
+    if test $# -gt 0; then
+        export _COMMAND=stow
+    else
+        echo "no package specified" 1>&2
+        exit 1
+    fi
+    ;;
+u | unstow)
+    shift
+    if test $# -gt 0; then
+        export _COMMAND=unstow
+    else
+        echo "no package specified" 1>&2
+        exit 1
+    fi
+    ;;
+w | wizard)
+    shift
+    export _COMMAND=wizard
+    ;;
+a | available)
+    shift
+    export _COMMAND=available
+    ;;
+stowed)
+    shift
+    export _COMMAND=stowed
+    ;;
+sync)
+    shift
+    export _COMMAND=sync
+    ;;
+path)
+    shift
+    export _COMMAND=path
+    ;;
+reset)
+    shift
+    export _COMMAND=reset
+    ;;
+status)
+    shift
+    export _COMMAND=status
+    ;;
+*)
+    echo "invalid command $1" 1>&2
+    exit 1
     ;;
 esac
 
