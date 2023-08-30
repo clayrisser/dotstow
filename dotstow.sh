@@ -228,6 +228,10 @@ _stowed() {
 }
 
 _sync() {
+    if [ ! -d "$DOTFILES_PATH" ]; then
+        echo "dotfiles not initialized" >&2
+        exit 1
+    fi
     cd $DOTFILES_PATH
     echo '$ git add -A'
     git add -A
