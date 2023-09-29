@@ -146,20 +146,8 @@ _prepare() {
     if [ ! -d "$_STATE_PATH" ]; then
         mkdir -p "$_STATE_PATH"
     fi
-    if (which prompt 2>&1 >/dev/null) && (which response 2>&1 >/dev/null) && [ ! -d "$DOTFILES_PATH" ]; then
-        mkdir -p $_TMP_PATH
-        true >$_TMP_PATH/cody.templates
-        cat <<EOF >$_TMP_PATH/cody.templates
-Template: dotstow/git_repo
-Type: string
-Description: git repo
- select the git repository that contains your dotfiles
-Default: git@gitlab.com:$USER/dotfiles
-
-EOF
-        prompt "$_TMP_PATH/cody.templates"
-        RESPONSE=$(response $_TMP_PATH/cody.templates)
-        GIT_REPO=$(echo "$RESPONSE" | grep '^dotstow/git_repo:' | sed 's|^dotstow/git_repo:||g' | sed 's|,| |g')
+    if [ ! -d "$DOTFILES_PATH" ]; then
+        GIT_REPO=$(kwyzod string -d "git@gitlab.com:$USER/dotfiles" "select the git repository that contains your dotfiles")
         rm -rf $_TMP_PATH
         _init "$GIT_REPO"
     fi
@@ -251,7 +239,6 @@ _wizard() {
         if [ "$(kwyzod boolean "UNSTOW PACKAGES\n\n$PACKAGES_UNSTOW")" != "1" ]; then
             exit 1
         fi
-
     fi
     if [ "$NOT_STOWED" != "" ]; then
         PACKAGES_STOW=$(kwyzod enum -m "select the packages you wish to stow" $NOT_STOWED)
@@ -326,7 +313,7 @@ init)
     shift
     if test $# -gt 0; then
         export _COMMAND=init
-    elif (! which prompt 2>&1 >/dev/null) || (! which response 2>&1 >/dev/null) || [ -d "$DOTFILES_PATH" ]; then
+    elif [ -d "$DOTFILES_PATH" ]; then
         echo "no repo specified" 1>&2
         exit 1
     fi
