@@ -1,4 +1,4 @@
-REPO=https://gitlab.com/risserlabs/community/dotstow.git
+REPO=https://gitlab.com/bitspur/community/dotstow.git
 
 _TMP_PATH="${XDG_RUNTIME_DIR:-$([ -d "/run/user/$(id -u $USER)" ] && echo "/run/user/$(id -u $USER)" || echo ${TMP:-${TEMP:-/tmp}})}/dotstow/$$"
 alias make=$(echo $(which remake 2>&1 >/dev/null && echo remake || echo $(which gmake 2>&1 >/dev/null && echo gmake || echo make)))
