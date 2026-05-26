@@ -1,0 +1,52 @@
+# GitLab CI — build dotstow packages via goreleaser.
+#
+# Push to default branch  → snapshot build, version 0.0.1-SNAPSHOT-<shortsha>
+# Push of a git tag       → real release, version = tag
+
+variables:
+  GIT_DEPTH: 0
+
+stages:
+  - package
+
+.package_base:
+  image:
+    name: goreleaser/goreleaser:v2.15.4
+    entrypoint: [""]
+  before_script:
+    - apk add --no-cache make fakeroot bash
+
+package:snapshot:
+  stage: package
+  extends: .package_base
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null'
+  script:
+    - goreleaser release --snapshot --clean
+  artifacts:
+    name: 'dotstow-snapshot-$CI_COMMIT_SHORT_SHA'
+    paths:
+      - dist/*.deb
+      - dist/*.rpm
+      - dist/*.tar.gz
+      - dist/*_checksums.txt
+    expire_in: 1 week
+
+package:release:
+  stage: package
+  extends: .package_base
+  rules:
+    - if: $CI_COMMIT_TAG
+  # Set GITLAB_TOKEN as a project CI/CD var holding a Project Access Token
+  # with `api` scope. CI_JOB_TOKEN cannot create releases (GitLab 15.9+).
+  script:
+    - 'echo "GITLAB_TOKEN length: ${#GITLAB_TOKEN}"'
+    - test -n "$GITLAB_TOKEN" || { echo "GITLAB_TOKEN not injected"; exit 1; }
+    - goreleaser release --clean
+  artifacts:
+    name: 'dotstow-$CI_COMMIT_TAG'
+    paths:
+      - dist/*.deb
+      - dist/*.rpm
+      - dist/*.tar.gz
+      - dist/*_checksums.txt

@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
+project_name: dotstow
+
+snapshot:
+  version_template: '{{ incpatch .Version }}-SNAPSHOT-{{ .ShortCommit }}'
+
+before:
+  hooks:
+    - make build
+
+# Pure-shell project — no Go binary to build.
+builds:
+  - id: dotstow
+    skip: true
+
+archives:
+  - id: dotstow
+    name_template: 'dotstow_{{ .Version }}_all'
+    formats: [tar.gz]
+    meta: true
+    files:
+      - src: build/usr/bin/dotstow
+        dst: bin/dotstow
+      - README.md
+      - LICENSE
+      - NOTICE
+
+nfpms:
+  - id: dotstow
+    package_name: dotstow
+    file_name_template: '{{ .PackageName }}_{{ .Version }}_all'
+    meta: true
+    homepage: https://gitlab.com/bitspur/community/dotstow
+    maintainer: Clay Risser <clayrisser@gmail.com>
+    description: |-
+      dotstow — dotfile manager built on top of GNU stow. Wires up a git
+      repo of dotfiles + interactive stow/unstow selection via gum.
+    license: Apache-2.0
+    section: utils
+    formats: [deb, rpm]
+    dependencies:
+      - stow
+    recommends:
+      - gum
+      - git
+    contents:
+      - src: build/usr/bin/dotstow
+        dst: /usr/bin/dotstow
+        file_info: { mode: 0755 }
+
+changelog:
+  use: git
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - '^ci:'
