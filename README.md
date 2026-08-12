@@ -16,13 +16,13 @@ completely different operating systems.
 To install dotstow, run the following command:
 
 ```sh
-$(curl --version >/dev/null 2>/dev/null && echo curl -L || echo wget -O-) https://gitlab.com/risserlabs/community/dotstow/-/raw/main/install.sh 2>/dev/null | sh
+$(curl --version >/dev/null 2>/dev/null && echo curl -L || echo wget -O-) https://gitlab.com/bitspur/tools/dotstow/-/raw/main/install.sh 2>/dev/null | sh
 ```
 
 or
 
 ```sh
-git clone https://github.com/clayrisser/dotstow
+git clone https://gitlab.com/bitspur/tools/dotstow.git
 cd dotstow
 make install
 ```
@@ -113,8 +113,8 @@ You can use my dotfiles as an example, reference or even as a starting point for
 - `dotstow reset`: Reset your dotfiles to the last commit.
 - `dotstow path`: Print the path of your dotfiles folder.
 
-> Please note that `dotstow wizard` only works on debian based linux systems of its
-> dependency on [debconf](https://salsa.debian.org/pkg-debconf/debconf).
+> Please note that `dotstow wizard` requires [gum](https://github.com/charmbracelet/gum)
+> to be installed.
 
 ```
 dotstow - manage dotfiles with git and stow
@@ -141,3 +141,14 @@ commands:
 
 - [Git](https://git-scm.com)
 - [GNU Stow](https://www.gnu.org/software/stow)
+- [gum](https://github.com/charmbracelet/gum) (optional, required by the wizard)
+
+## Development
+
+```sh
+make prepare   # one-time toolchain setup (asdf, shfmt, bats, goreleaser)
+make lint      # shfmt diff + sh -n syntax check
+make format    # auto-format shell sources
+make test      # run the bats test suite
+make package   # build snapshot packages with goreleaser
+```
