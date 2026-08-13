@@ -6,10 +6,6 @@ project_name: dotstow
 snapshot:
   version_template: '{{ incpatch .Version }}-SNAPSHOT-{{ .ShortCommit }}'
 
-before:
-  hooks:
-    - make build
-
 # Pure-shell project — no Go binary to build.
 builds:
   - id: dotstow
@@ -21,8 +17,10 @@ archives:
     formats: [tar.gz]
     meta: true
     files:
-      - src: build/usr/bin/dotstow
+      - src: dotstow.sh
         dst: bin/dotstow
+        info:
+          mode: 0755
       - README.md
       - LICENSE
       - NOTICE
@@ -32,7 +30,7 @@ nfpms:
     package_name: dotstow
     file_name_template: '{{ .PackageName }}_{{ .Version }}_all'
     meta: true
-    homepage: https://gitlab.com/bitspur/community/dotstow
+    homepage: https://gitlab.com/bitspur/tools/dotstow
     maintainer: Clay Risser <clayrisser@gmail.com>
     description: |-
       dotstow — dotfile manager built on top of GNU stow. Wires up a git
@@ -46,7 +44,7 @@ nfpms:
       - gum
       - git
     contents:
-      - src: build/usr/bin/dotstow
+      - src: dotstow.sh
         dst: /usr/bin/dotstow
         file_info: { mode: 0755 }
 

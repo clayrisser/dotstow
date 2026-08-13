@@ -1,4 +1,4 @@
-# GitLab CI — build dotstow packages via goreleaser.
+# GitLab CI — lint + test on every push; package dotstow via goreleaser.
 #
 # Push to default branch  → snapshot build, version 0.0.1-SNAPSHOT-<shortsha>
 # Push of a git tag       → real release, version = tag
@@ -7,14 +7,22 @@ variables:
   GIT_DEPTH: 0
 
 stages:
+  - test
   - package
+
+test:
+  stage: test
+  image:
+    name: goreleaser/goreleaser:v2.15.4
+    entrypoint: [""]
+  script:
+    - apk add --no-cache make git stow bats shfmt cloc
+    - make lint test
 
 .package_base:
   image:
     name: goreleaser/goreleaser:v2.15.4
     entrypoint: [""]
-  before_script:
-    - apk add --no-cache make fakeroot bash
 
 package:snapshot:
   stage: package
